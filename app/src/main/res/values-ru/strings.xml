@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NeWork</string>
+    <string name="posts">Посты</string>
+    <string name="events">События</string>
+    <string name="users">Пользователи</string>
+    <string name="author_avatar">Аватар автора</string>
+    <string name="post_menu">Меню поста</string>
+    <string name="attachment_card">Карточка вложений</string>
+    <string name="like_button">Кнопка лайк</string>
+    <string name="share_button">Кнопка поделиться</string>
+</resources>

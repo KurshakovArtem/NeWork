@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">NeWork</string>
+    <string name="posts">Posts</string>
+    <string name="events">Events</string>
+    <string name="users">Users</string>
+    <string name="author_avatar">Author avatar</string>
+    <string name="post_menu">Post menu</string>
+    <string name="attachment_card">Attachment card</string>
+    <string name="like_button">Like button</string>
+    <string name="share_button">Share button</string>
+
+
 </resources>

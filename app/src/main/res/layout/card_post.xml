@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/common_spacing"
+    app:cardBackgroundColor="#CAC4D0"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:paddingEnd="0dp">
+
+
+            <ImageView
+                android:id="@+id/card_avatar"
+                android:layout_width="@dimen/posts_avatar_size"
+                android:layout_height="@dimen/posts_avatar_size"
+                android:contentDescription="@string/author_avatar"
+                android:src="@drawable/ic_loading_100dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                tools:src="@tools:sample/avatars[4]" />
+
+            <TextView
+                android:id="@+id/card_author"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_spacing"
+                android:layout_marginEnd="@dimen/common_spacing"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/card_menu"
+                app:layout_constraintStart_toEndOf="@id/card_avatar"
+                app:layout_constraintTop_toTopOf="@id/card_menu"
+                tools:text="Автор                проверка" />
+
+            <TextView
+                android:id="@+id/card_published"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_spacing"
+                android:layout_marginEnd="@dimen/common_spacing"
+                app:layout_constraintBottom_toBottomOf="@id/card_menu"
+                app:layout_constraintEnd_toStartOf="@id/card_menu"
+                app:layout_constraintStart_toEndOf="@id/card_avatar"
+                tools:text="Дата и время" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/card_menu"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="@dimen/button_area"
+                android:layout_height="@dimen/button_area"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/post_menu"
+                android:paddingBottom="@dimen/common_spacing"
+                app:icon="@drawable/ic_more_vert_24"
+                app:iconTint="?attr/colorControlNormal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <ImageView
+            android:id="@+id/card_attachment_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/attachment_card"
+            android:scaleType="fitCenter"
+            tools:src="@drawable/video_not_found" />
+
+        <TextView
+            android:id="@+id/card_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_spacing"
+            android:autoLink="web"
+            tools:text="Текст контента" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/card_like_button"
+                style="@style/Style.CountButton"
+                android:contentDescription="@string/like_button"
+                app:icon="@drawable/ic_like_24"
+                android:textSize="12sp"
+                tools:text="1111"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/card_share_button"
+                style="@style/Style.CountButton"
+                android:contentDescription="@string/share_button"
+                app:icon="@drawable/ic_share_24"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@id/card_like_button"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="@dimen/button_area"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

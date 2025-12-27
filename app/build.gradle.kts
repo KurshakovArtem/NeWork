@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -21,12 +22,24 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        val propertiesFile = rootProject.file("maps.properties")
+        if (propertiesFile.exists()) {
+            propertiesFile.inputStream().use { input ->
+                properties.load(input)
+            }
+        }
+        buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY", "")}\"")
     }
+
 
     buildFeatures {
         viewBinding = true
         buildConfig = true
     }
+
+
 
     buildTypes {
         release {
@@ -35,6 +48,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            manifestPlaceholders["usesCleartextTraffic"] = false
+            buildConfigField("String", "BASE_URL", "\"http://94.228.125.136:8080\"")
+        }
+        debug {
+            manifestPlaceholders["usesCleartextTraffic"] = true
+            buildConfigField("String", "BASE_URL", "\"http://94.228.125.136:8080\"")
         }
     }
     compileOptions {
@@ -82,12 +101,12 @@ dependencies {
     implementation(libs.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-    implementation (libs.androidx.room.paging)
-    implementation (libs.androidx.swiperefreshlayout)
-    implementation (libs.glide)
-    implementation (libs.imagepicker)
-    implementation (libs.hilt.android)
-    ksp (libs.dagger.hilt.compiler)
+    implementation(libs.androidx.room.paging)
+    implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.glide)
+    implementation(libs.imagepicker)
+    implementation(libs.hilt.android)
+    ksp(libs.dagger.hilt.compiler)
     implementation(libs.desugaring)
 
 
