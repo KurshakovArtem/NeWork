@@ -3,11 +3,13 @@ package ru.netology.nework.api
 import kotlinx.coroutines.flow.Flow
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import ru.netology.nework.BuildConfig
 import ru.netology.nework.dto.Post
+import ru.netology.nework.dto.ResponsePost
 import java.util.concurrent.TimeUnit
 
 
@@ -32,6 +34,6 @@ fun retrofit(client: OkHttpClient): Retrofit = Retrofit.Builder()
 interface PostApiService {
 
     @GET("posts")
-    suspend fun getAllPosts(): List<Post>
+    suspend fun getAllPosts(): List<ResponsePost>
 
 }

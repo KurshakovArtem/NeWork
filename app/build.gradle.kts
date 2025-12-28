@@ -57,6 +57,7 @@ android {
         }
     }
     compileOptions {
+        //isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -67,14 +68,13 @@ android {
         }
     }
 
-
 //    kotlinOptions {
 //        jvmTarget = "11"
 //    }
 
-//    ksp {
-//        arg("room.schemaLocation", "$projectDir/schemas")
-//    }
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
 
 }
 
