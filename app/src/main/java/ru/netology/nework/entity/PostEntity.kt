@@ -33,7 +33,8 @@ data class PostEntity(
     val attachmentUrl: String = "",
     val attachmentType: String = "",
     @param:TypeConverters(Converter::class)
-    val users: List<UserPreview>? = emptyList()
+    val users: List<UserPreview>? = emptyList(),
+    val ownedByMe: Boolean = false,
 ) {
     fun toDto() = Post(
         id = id,
@@ -55,6 +56,7 @@ data class PostEntity(
             url = attachmentUrl, type = attachmentType.toAttachmentType()
         ),
         users = users,
+        ownedByMe = ownedByMe,
     )
 
     companion object {
@@ -77,7 +79,8 @@ data class PostEntity(
             attachment = dto.attachment != null,
             attachmentUrl = if (dto.attachment != null) dto.attachment.url else "",
             attachmentType = if (dto.attachment != null) dto.attachment.type.toString() else "EMPTY",
-            users = dto.users
+            users = dto.users,
+            ownedByMe = dto.ownedByMe,
         )
     }
 }

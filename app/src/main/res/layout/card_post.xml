@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_post"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/common_spacing"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     app:cardBackgroundColor="#CAC4D0"
     app:cardCornerRadius="16dp"
-    app:cardElevation="5dp">
+    app:cardElevation="5dp"
+    app:strokeColor="@color/gray"
+    app:strokeWidth="1dp"
+    tools:context=".activity.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,8 +22,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:paddingEnd="0dp">
+            android:padding="8dp">
 
 
             <ImageView
@@ -75,15 +78,30 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-        <ImageView
-            android:id="@+id/card_attachment_post"
+        <FrameLayout
+            android:id="@+id/card_attachment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/attachment_card"
-            android:scaleType="fitCenter"
-            tools:src="@drawable/video_not_found" />
+            android:layout_gravity="center">
+
+
+            <ImageView
+                android:id="@+id/card_attachment_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/attachment_card"
+                android:scaleType="fitCenter"
+                tools:src="@drawable/video_not_found" />
+
+            <VideoView
+                android:id="@+id/card_attachment_video"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/attachment_card" />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/card_content"
@@ -101,24 +119,24 @@
                 android:id="@+id/card_like_button"
                 style="@style/Style.CountButton"
                 android:contentDescription="@string/like_button"
-                app:icon="@drawable/ic_like_24"
                 android:textSize="12sp"
-                tools:text="1111"
+                app:icon="@drawable/ic_like_24"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="1111" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/card_share_button"
                 style="@style/Style.CountButton"
+                android:layout_width="@dimen/button_area"
                 android:contentDescription="@string/share_button"
-                app:icon="@drawable/ic_share_24"
                 android:textSize="12sp"
+                app:icon="@drawable/ic_share_24"
                 app:layout_constraintStart_toEndOf="@id/card_like_button"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_width="@dimen/button_area"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+
+</com.google.android.material.card.MaterialCardView>

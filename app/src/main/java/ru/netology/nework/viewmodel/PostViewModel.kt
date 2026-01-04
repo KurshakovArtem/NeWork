@@ -7,8 +7,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nework.dto.Post
+import ru.netology.nework.model.FeedModel
 import ru.netology.nework.repository.PostRepository
 import javax.inject.Inject
 
@@ -16,8 +18,9 @@ import javax.inject.Inject
 class PostViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
 
-    val data: LiveData<List<Post>> = repository.data
-        .catch { it.printStackTrace() }  // реализовать обработку ошибок(snackbar)
+    val data: LiveData<FeedModel> = repository.data
+        .map(::FeedModel)
+        .catch { it.printStackTrace() }
         .asLiveData(Dispatchers.Default)
 
     fun loadPosts(){

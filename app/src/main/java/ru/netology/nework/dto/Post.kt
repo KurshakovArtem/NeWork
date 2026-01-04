@@ -17,5 +17,6 @@ data class Post(
     val likeOwnerIds: List<Long>? = emptyList(),
     val likeByMe: Boolean = false,
     val attachment: Attachment? = null,
-    val users: List<UserPreview>? = emptyList()
+    val users: List<UserPreview>? = emptyList(),
+    val ownedByMe: Boolean = false,
 )

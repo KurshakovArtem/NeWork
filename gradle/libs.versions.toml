@@ -22,6 +22,7 @@ glide = "5.0.5"
 imagepicker = "2.1"
 hiltAndroid = "2.57.2"
 core_desugaring_version = "2.1.5"
+mapsMobile = "4.19.0-lite"
 
 
 [libraries]
@@ -54,6 +55,7 @@ imagepicker = { module = "com.github.dhaval2404:imagepicker", version.ref = "ima
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "core_desugaring_version" }
+maps-mobile = { module = "com.yandex.android:maps.mobile", version.ref = "mapsMobile" }
 
 
 

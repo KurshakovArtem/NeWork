@@ -10,7 +10,7 @@ import ru.netology.nework.entity.PostEntity
 @Dao
 interface PostDao {
     @Query("SELECT * FROM PostEntity ORDER BY id DESC")
-    fun getPosts(): Flow<List<PostEntity>>
+    fun getAllPosts(): Flow<List<PostEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(post: PostEntity)

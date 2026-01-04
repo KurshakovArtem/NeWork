@@ -9,4 +9,27 @@
     <string name="attachment_card">Карточка вложений</string>
     <string name="like_button">Кнопка лайк</string>
     <string name="share_button">Кнопка поделиться</string>
+    <string name="remove">Удалить</string>
+    <string name="edit">Редактировать</string>
+    <string name="person_icon_description">Иконка пользователя</string>
+    <string name="user_name">Имя пользователя</string>
+    <string name="password_icon_description">Иконка пароля</string>
+    <string name="password">Пароль</string>
+    <string name="sign_in">Войти</string>
+    <string name="go_to_registration">У вас нет аккаунта? Зарегистрируйтесь</string>
+    <string name="description_nickname">Имя пользователя</string>
+    <string name="description_avatar">Аватар</string>
+    <string name="login">Логин</string>
+    <string name="confirm_password">Подтвердить пароль</string>
+    <string name="registration">Зарегистрироваться</string>
+    <string name="error_auth">Неверный логин или пароль</string>
+    <string name="image_error">Ошибка выбора изображения</string>
+    <string name="error_registration">Ошибка регистрации</string>
+    <string name="take_photo">Сделать фото</string>
+    <string name="pick_photo">Выбрать фото</string>
+    <string name="select_photo_action">Выберите действие</string>
+    <string name="cancel">Отмена</string>
+    <string name="menu_logout">Выйти</string>
+    <string name="menu_sign_in">Войти</string>
+    <string name="menu_sign_up">Регистрация</string>
 </resources>

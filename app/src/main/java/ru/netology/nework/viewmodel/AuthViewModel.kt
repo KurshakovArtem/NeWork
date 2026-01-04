@@ -1,0 +1,106 @@
+package ru.netology.nework.viewmodel
+
+import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import ru.netology.nework.auth.AppAuth
+import ru.netology.nework.dto.AuthState
+import ru.netology.nework.model.AuthModelState
+import ru.netology.nework.model.PhotoModel
+import java.io.File
+import javax.inject.Inject
+
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val appAuth: AppAuth
+) : ViewModel() {
+
+    val data: LiveData<AuthState> = appAuth
+        .authStateFlow
+        .asLiveData(Dispatchers.Default)
+
+    private val _dataAuthState = MutableLiveData<AuthModelState>()
+
+    val dataState: LiveData<AuthModelState>
+        get() = _dataAuthState
+    val isAuthorized: Boolean
+        get() = appAuth.authStateFlow.value.id != 0L
+
+    private val _photo = MutableLiveData<PhotoModel?>()
+    val photo: LiveData<PhotoModel?>
+        get() = _photo
+
+    fun signIn(username: String, password: String) {
+        if (username.isEmpty() || password.isEmpty()) {
+            _dataAuthState.value = AuthModelState(error = true)
+        } else {
+            viewModelScope.launch {
+                try {
+                    _dataAuthState.value = AuthModelState(loading = true)
+                    appAuth.sendLoginPassword(username, password)
+                    _dataAuthState.value = AuthModelState(success = true)
+                    clearState()
+                    _dataAuthState.value = AuthModelState(needRefresh = true)
+                } catch (_: RuntimeException) {
+                    _dataAuthState.value = AuthModelState(error = true)
+                }
+            }
+        }
+    }
+
+    fun signUp(nickname: String, login: String, password: String, confirmPassword: String) {
+        if (password != confirmPassword
+            || password.isEmpty()
+            || nickname.isEmpty()
+            || login.isEmpty()
+        ) {
+            _dataAuthState.value = AuthModelState(error = true)
+        } else {
+            viewModelScope.launch {
+                try {
+                    _dataAuthState.value = AuthModelState(loading = true)
+                    if (_photo.value == null) {
+                        appAuth.sendRegistration(nickname, login, password)
+                        _dataAuthState.value = AuthModelState(success = true, needRefresh = true)
+                    } else {
+                        appAuth.sendRegistrationWithPhoto(
+                            nickname,
+                            login,
+                            password,
+                            _photo.value?.file ?: return@launch
+                        )
+                        removePhoto()
+                        _dataAuthState.value = AuthModelState(success = true, needRefresh = true)
+                    }
+                } catch (_: RuntimeException) {
+                    _dataAuthState.value = AuthModelState(error = true)
+                }
+            }
+        }
+    }
+
+    fun removeAuth() {
+        appAuth.removeAuth()
+        _dataAuthState.value = AuthModelState(needRefresh = true)
+    }
+
+    fun clearState() {
+        _dataAuthState.value = AuthModelState()
+    }
+
+    fun updatePhoto(uri: Uri, file: File) {
+        _photo.value = PhotoModel(uri, file)
+    }
+
+    fun removePhoto() {
+        _photo.value = null
+    }
+
+
+}

@@ -8,6 +8,29 @@
     <string name="attachment_card">Attachment card</string>
     <string name="like_button">Like button</string>
     <string name="share_button">Share button</string>
+    <string name="remove">Remove</string>
+    <string name="edit">Edit</string>
+    <string name="person_icon_description">Person icon</string>
+    <string name="user_name">User name</string>
+    <string name="password_icon_description">Password icon</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Login</string>
+    <string name="go_to_registration">Don\'t have an account? Register</string>
+    <string name="description_nickname">Nickname</string>
+    <string name="description_avatar">Avatar</string>
+    <string name="login">Login</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="registration">Registration</string>
+    <string name="error_auth">Incorrect login or password</string>
+    <string name="image_error">Image pick error</string>
+    <string name="error_registration">Registration error</string>
+    <string name="take_photo">Take photo</string>
+    <string name="pick_photo">Pick photo</string>
+    <string name="select_photo_action">Select action</string>
+    <string name="cancel">Cancel</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_sign_in">SignIn</string>
+    <string name="menu_sign_up">SignUp</string>
 
 
 </resources>

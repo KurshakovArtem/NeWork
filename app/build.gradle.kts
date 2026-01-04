@@ -31,6 +31,7 @@ android {
             }
         }
         buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY", "")}\"")
+        buildConfigField("String", "MAPS_API_KEY", "\"${properties.getProperty("MAPS_API_KEY", "")}\"")
     }
 
 
@@ -108,6 +109,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.dagger.hilt.compiler)
     implementation(libs.desugaring)
+    implementation(libs.maps.mobile)
 
 
 }

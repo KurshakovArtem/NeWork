@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/avatar_card"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="90dp"
+        app:cardCornerRadius="80dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/selector_text_input"
+        app:strokeWidth="2dp">
+
+        <ImageView
+            android:id="@+id/avatar_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="40dp"
+            android:background="@color/light_gray"
+            android:contentDescription="@string/description_avatar"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_photo_camera_24"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/sign_up_login_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_spacing"
+        android:layout_marginEnd="@dimen/common_spacing"
+        app:boxStrokeColor="@color/selector_text_input"
+        app:errorEnabled="true"
+        app:hintAnimationEnabled="true"
+        app:hintEnabled="true"
+        app:hintTextColor="@color/sign_in_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/avatar_card"
+        app:startIconContentDescription="@string/person_icon_description"
+        app:startIconDrawable="@drawable/ic_person_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sign_up_login_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="Login"
+            android:hint="@string/login"
+            android:imeOptions="actionNext"
+            android:inputType="textPersonName"
+            android:maxLength="50"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nickname_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_spacing"
+        android:layout_marginEnd="@dimen/common_spacing"
+        app:boxStrokeColor="@color/selector_text_input"
+        app:errorEnabled="true"
+        app:hintAnimationEnabled="true"
+        app:hintEnabled="true"
+        app:hintTextColor="@color/sign_in_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sign_up_login_layout"
+        app:startIconContentDescription="@string/person_icon_description"
+        app:startIconDrawable="@drawable/ic_person_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nickname_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="Nickname"
+            android:hint="@string/description_nickname"
+            android:imeOptions="actionNext"
+            android:inputType="textPersonName"
+            android:maxLength="30"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/sign_up_password_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_spacing"
+        android:layout_marginEnd="@dimen/common_spacing"
+        app:boxStrokeColor="@color/selector_text_input"
+        app:endIconMode="password_toggle"
+        app:errorEnabled="true"
+        app:hintAnimationEnabled="true"
+        app:hintEnabled="true"
+        app:hintTextColor="@color/sign_in_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nickname_layout"
+        app:startIconContentDescription="@string/password_icon_description"
+        app:startIconDrawable="@drawable/ic_password_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sign_up_password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="Password"
+            android:hint="@string/password"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            android:maxLength="20"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/confirm_password_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_spacing"
+        android:layout_marginEnd="@dimen/common_spacing"
+        app:boxStrokeColor="@color/selector_text_input"
+        app:endIconMode="password_toggle"
+        app:errorEnabled="true"
+        app:hintAnimationEnabled="true"
+        app:hintEnabled="true"
+        app:hintTextColor="@color/sign_in_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sign_up_password_layout"
+        app:startIconContentDescription="@string/password_icon_description"
+        app:startIconDrawable="@drawable/ic_password_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/confirm_password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="Password"
+            android:hint="@string/confirm_password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:maxLength="30"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/registration_button"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_spacing"
+        android:layout_marginEnd="@dimen/common_spacing"
+        android:text="@string/registration"
+        android:textSize="20sp"
+        app:cornerRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/confirm_password_layout" />
+
+    <ProgressBar
+        android:id="@+id/progress_sign_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
