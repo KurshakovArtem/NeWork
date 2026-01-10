@@ -58,9 +58,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/common_spacing"
                 android:layout_marginEnd="@dimen/common_spacing"
-                app:layout_constraintBottom_toBottomOf="@id/card_menu"
+                app:layout_constraintBottom_toBottomOf="@id/card_avatar"
                 app:layout_constraintEnd_toStartOf="@id/card_menu"
                 app:layout_constraintStart_toEndOf="@id/card_avatar"
+                android:text="test22"
                 tools:text="Дата и время" />
 
             <com.google.android.material.button.MaterialButton
@@ -110,6 +111,15 @@
             android:layout_margin="@dimen/common_spacing"
             android:autoLink="web"
             tools:text="Текст контента" />
+
+        <TextView
+            android:id="@+id/card_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            android:layout_marginEnd="@dimen/common_spacing"
+            android:autoLink="web"
+            tools:text="www.youtube.com" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

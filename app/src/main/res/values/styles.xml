@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Style.CountButton" parent="Widget.Material3.Button.TextButton.Icon">
 
         <item name="android:textColor">?attr/colorControlNormal</item>
@@ -8,6 +9,27 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="BottomNavigationViewStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconSize">24dp</item>
+        <item name="itemTextAppearanceActive">@style/BottomNavTextActive</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavTextInactive</item>
+    </style>
 
+
+    <style name="BottomNavTextActive">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="BottomNavTextInactive">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="ZoomButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:backgroundTint">@android:color/white</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="iconSize">24dp</item>
+    </style>
 
 </resources>

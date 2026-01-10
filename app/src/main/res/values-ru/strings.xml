@@ -32,4 +32,35 @@
     <string name="menu_logout">Выйти</string>
     <string name="menu_sign_in">Войти</string>
     <string name="menu_sign_up">Регистрация</string>
+    <string name="sign_out">Выйти</string>
+    <string name="are_you_sure">Вы точно хотите выйти?</string>
+    <string name="remove_photo">Удалить фото?</string>
+    <string name="are_you_sure_remove_photo">Вы уверены, что хотите удалить фото?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="add_post">Добавить пост</string>
+    <string name="must_login">Необходимо войти</string>
+    <string name="need_auth">Требуется авторизация</string>
+    <string name="post_text">Текст поста</string>
+    <string name="description_photo">Фото</string>
+    <string name="description_remove_photo">Удалить фото</string>
+    <string name="menu_remove">Удалить</string>
+    <string name="add_photo">Добавить фото</string>
+    <string name="add_attachment">Добавить вложение</string>
+    <string name="add_users">Добавить пользователей</string>
+    <string name="add_location">Добавить местоположение</string>
+    <string name="empty_posts">Нет ни одного поста.</string>
+    <string name="remove_error">Ошибка удаления</string>
+    <string name="save_error">Не удалось сохранить пост</string>
+    <string name="like_error">Ошибка добавления Like</string>
+    <string name="dislike_error">Ошибка удаления Like</string>
+    <string name="error_loading">Что-то пошло не так. Попробуйте позже.</string>
+    <string name="retry_loading">Повторить</string>
+    <string name="menu_save">menu save</string>
+    <string name="add_post_text">Добавте текст поста:</string>
+    <string name="add_link">Добавте ссылку:</string>
+    <string name="link">Ссылка</string>
+    <string name="permission_required">Необходимо разрешение</string>
+    <string name="selected_point">Выбранная точка</string>
+
 </resources>

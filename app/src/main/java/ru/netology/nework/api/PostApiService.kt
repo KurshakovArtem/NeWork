@@ -8,16 +8,21 @@ import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 import ru.netology.nework.BuildConfig
 import ru.netology.nework.dto.AuthState
+import ru.netology.nework.dto.Media
 import ru.netology.nework.dto.Post
-import ru.netology.nework.dto.ResponsePost
+import ru.netology.nework.dto.PostRequest
+import ru.netology.nework.dto.User
 import java.util.concurrent.TimeUnit
 
 
@@ -42,8 +47,16 @@ fun retrofit(client: OkHttpClient): Retrofit = Retrofit.Builder()
 interface PostApiService {
 
     @GET("posts")
-    suspend fun getAllPosts(): List<ResponsePost>
+    suspend fun getAllPosts(): List<Post>
 
+    @POST("posts/{id}/likes")
+    suspend fun likeById(@Path("id") id: Long): Post
+
+    @DELETE("posts/{id}/likes")
+    suspend fun dislikeById(@Path("id") id: Long): Post
+
+    @DELETE("posts/{id}")
+    suspend fun removeById(@Path("id") id: Long)
 
     @FormUrlEncoded
     @POST("users/authentication")
@@ -69,4 +82,17 @@ interface PostApiService {
         @Part media: MultipartBody.Part,
     ): AuthState
 
+    @Multipart
+    @POST("media")
+    suspend fun upload(@Part media: MultipartBody.Part): Media
+
+    @POST("posts")
+    suspend fun save(@Body post: PostRequest): Post
+
+
+    @GET("users")
+    suspend fun getAllUsers(): List<User>
+
+    @GET("users/{id}")
+    suspend fun getUserById(@Path("id") id: Long?): User
 }

@@ -5,6 +5,8 @@
     <color name="gray">#565656</color>
     <color name="light_gray">#C4C4C4</color>
     <color name="blue">#000080</color>
+    <color name="light_blue">#87CEEB</color>
     <color name="error_red">#CE527B</color>
     <color name="sign_in_menu">#364197</color>
+    <color name="divider_color">#F3EDF7</color>
 </resources>

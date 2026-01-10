@@ -37,5 +37,20 @@ class Converter {
         return gson.fromJson(json, type)
     }
 
+    // Конвертируем Map<Long, UserPreview>: из Map в JSON-строку
+    @TypeConverter
+    fun fromUserPreviewMap(map: Map<Long, UserPreview>?): String? {
+        if (map == null) return null
+        return gson.toJson(map)
+    }
+
+    // Конвертируем JSON-строку в Map<Long, UserPreview>
+    @TypeConverter
+    fun toUserPreviewMap(json: String?): Map<Long, UserPreview>? {
+        if (json == null) return null
+        val type = object : TypeToken<Map<Long, UserPreview>>() {}.type
+        return gson.fromJson(json, type)
+    }
+
 
 }

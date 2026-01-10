@@ -1,5 +1,6 @@
 package ru.netology.nework.supportingFunctions
 
+import android.content.Context
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import ru.netology.nework.R
@@ -21,4 +22,8 @@ fun ImageView.loadAttachmentImage(url: String){
         .error(R.drawable.ic_error_100dp)
         .timeout(10_000)
         .into(this)
+}
+
+fun Context.dpToPx(dp: Int): Int {
+    return (dp * resources.displayMetrics.density).toInt()
 }

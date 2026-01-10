@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_spacing"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="180dp"
         android:layout_marginEnd="@dimen/common_spacing"
         app:boxStrokeColor="@color/selector_text_input"
         app:errorEnabled="true"

@@ -8,9 +8,11 @@ import ru.netology.nework.BuildConfig
 
 import ru.netology.nework.api.PostApiService
 import ru.netology.nework.api.apiKeyInterceptor
+import ru.netology.nework.api.authInterceptor
 import ru.netology.nework.api.client
 import ru.netology.nework.api.loggingInterceptor
 import ru.netology.nework.api.retrofit
+import ru.netology.nework.auth.AppAuth
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -19,12 +21,12 @@ object PostApiServiceModule {
 
     @Provides
     @Singleton
-    fun providePostApiService(): PostApiService {
+    fun providePostApiService(auth: AppAuth): PostApiService {
         return retrofit(
             client(
                 apiKeyInterceptor(BuildConfig.API_KEY),
                 loggingInterceptor(),
-                //authInterceptor(auth)
+                authInterceptor(auth)
             )
         ).create(PostApiService::class.java)
     }

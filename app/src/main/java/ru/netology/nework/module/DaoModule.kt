@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.netology.nework.dao.PostDao
+import ru.netology.nework.dao.UserDao
 import ru.netology.nework.db.AppDb
 
 @InstallIn(SingletonComponent::class)
@@ -13,4 +14,7 @@ object DaoModule {
 
     @Provides
     fun providePostDao(db: AppDb): PostDao = db.postDao
+
+    @Provides
+    fun provideUserDao(db: AppDb): UserDao = db.userDao
 }

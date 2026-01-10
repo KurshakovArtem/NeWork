@@ -14,6 +14,7 @@ import ru.netology.nework.R
 import ru.netology.nework.databinding.CardPostBinding
 import ru.netology.nework.dto.Post
 import ru.netology.nework.enumeration.AttachmentType
+import ru.netology.nework.supportingFunctions.convertResponseToCardPost
 import ru.netology.nework.supportingFunctions.converterNumToString
 import ru.netology.nework.supportingFunctions.loadAttachmentImage
 import ru.netology.nework.supportingFunctions.loadAvatar
@@ -59,8 +60,15 @@ class PostViewHolder(
 
     fun bind(post: Post) = with(binding) {
         cardAuthor.text = post.author
-        cardPublished.text = post.published
+        cardPublished.text = convertResponseToCardPost(post.published)
         cardContent.text = post.content
+
+        if (!post.link.isNullOrBlank()) {
+            cardLink.visibility = View.VISIBLE
+            cardLink.text = post.link
+        } else {
+            cardLink.visibility = View.GONE
+        }
 
         if (post.authorAvatar.isNullOrBlank()) {
             cardAvatar.setImageResource(R.drawable.ic_empty_avatar_24)
@@ -68,7 +76,7 @@ class PostViewHolder(
             cardAvatar.loadAvatar(post.authorAvatar)
         }
 
-        if (post.likeByMe) {
+        if (post.likedByMe) {
             cardLikeButton.setIconResource(R.drawable.ic_liked_24)
         } else {
             cardLikeButton.setIconResource(R.drawable.ic_like_24)

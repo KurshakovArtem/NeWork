@@ -28,12 +28,12 @@ data class PostEntity(
     val mentionedMe: Boolean = false,
     @param:TypeConverters(Converter::class)
     val likeOwnerIds: List<Long>? = emptyList(),
-    val likeByMe: Boolean = false,
+    val likedByMe: Boolean = false,
     val attachment: Boolean = false,
     val attachmentUrl: String = "",
     val attachmentType: String = "",
     @param:TypeConverters(Converter::class)
-    val users: List<UserPreview>? = emptyList(),
+    val users: Map<Long, UserPreview>? = emptyMap(),
     val ownedByMe: Boolean = false,
 ) {
     fun toDto() = Post(
@@ -51,7 +51,7 @@ data class PostEntity(
         mentionIds = mentionIds,
         mentionedMe = mentionedMe,
         likeOwnerIds = likeOwnerIds,
-        likeByMe = likeByMe,
+        likedByMe = likedByMe,
         attachment = if (!attachment) null else Attachment(
             url = attachmentUrl, type = attachmentType.toAttachmentType()
         ),
@@ -75,7 +75,7 @@ data class PostEntity(
             mentionIds = dto.mentionIds,
             mentionedMe = dto.mentionedMe,
             likeOwnerIds = dto.likeOwnerIds,
-            likeByMe = dto.likeByMe,
+            likedByMe = dto.likedByMe,
             attachment = dto.attachment != null,
             attachmentUrl = if (dto.attachment != null) dto.attachment.url else "",
             attachmentType = if (dto.attachment != null) dto.attachment.type.toString() else "EMPTY",
