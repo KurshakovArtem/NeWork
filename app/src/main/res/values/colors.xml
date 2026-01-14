@@ -9,4 +9,5 @@
     <color name="error_red">#CE527B</color>
     <color name="sign_in_menu">#364197</color>
     <color name="divider_color">#F3EDF7</color>
+    <color name="green">#008000</color>
 </resources>

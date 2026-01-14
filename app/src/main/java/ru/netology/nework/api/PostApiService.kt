@@ -1,11 +1,9 @@
 package ru.netology.nework.api
 
-import kotlinx.coroutines.flow.Flow
 import okhttp3.Interceptor
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -19,6 +17,7 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import ru.netology.nework.BuildConfig
 import ru.netology.nework.dto.AuthState
+import ru.netology.nework.dto.Event
 import ru.netology.nework.dto.Media
 import ru.netology.nework.dto.Post
 import ru.netology.nework.dto.PostRequest
@@ -50,13 +49,22 @@ interface PostApiService {
     suspend fun getAllPosts(): List<Post>
 
     @POST("posts/{id}/likes")
-    suspend fun likeById(@Path("id") id: Long): Post
+    suspend fun likePostById(@Path("id") id: Long): Post
 
     @DELETE("posts/{id}/likes")
-    suspend fun dislikeById(@Path("id") id: Long): Post
+    suspend fun dislikePostById(@Path("id") id: Long): Post
+
+    @POST("events/{id}/likes")
+    suspend fun likeEventById(@Path("id") id: Long): Event
+
+    @DELETE("events/{id}/likes")
+    suspend fun dislikeEventById(@Path("id") id: Long): Event
 
     @DELETE("posts/{id}")
-    suspend fun removeById(@Path("id") id: Long)
+    suspend fun removePostById(@Path("id") id: Long)
+
+    @DELETE("events/{id}")
+    suspend fun removeEventById(@Path("id") id: Long)
 
     @FormUrlEncoded
     @POST("users/authentication")
@@ -89,10 +97,16 @@ interface PostApiService {
     @POST("posts")
     suspend fun save(@Body post: PostRequest): Post
 
+    @POST("posts")
+    suspend fun save(@Body post: Post): Post
 
     @GET("users")
     suspend fun getAllUsers(): List<User>
 
     @GET("users/{id}")
     suspend fun getUserById(@Path("id") id: Long?): User
+
+
+    @GET("events")
+    suspend fun getAllEvents(): List<Event>
 }

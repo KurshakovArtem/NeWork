@@ -138,20 +138,6 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    private fun showLogoutDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.sign_out)
-            .setMessage(R.string.are_you_sure)
-            .setPositiveButton(R.string.menu_logout) { _, _ ->
-                appAuth.removeAuth()
-                findNavController(R.id.nav_host_fragment).navigateUp()
-            }
-            .setNegativeButton(R.string.cancel) { dialog, _ ->
-                dialog.cancel()
-            }
-            .setCancelable(true)
-            .show()
-    }
 
     private fun requestNotificationsPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {

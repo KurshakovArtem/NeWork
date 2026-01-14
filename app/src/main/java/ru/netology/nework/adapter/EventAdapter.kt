@@ -11,100 +11,110 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nework.R
-import ru.netology.nework.databinding.CardPostBinding
-import ru.netology.nework.dto.Post
+import ru.netology.nework.databinding.CardEventBinding
+import ru.netology.nework.dto.Event
 import ru.netology.nework.enumeration.AttachmentType
 import ru.netology.nework.supportingFunctions.convertResponseToCardPost
 import ru.netology.nework.supportingFunctions.converterNumToString
 import ru.netology.nework.supportingFunctions.loadAttachmentImage
 import ru.netology.nework.supportingFunctions.loadAvatar
 
-
-interface OnInteractionListener {
-    fun onLike(post: Post) {}
-    fun onEdit(post: Post) {}
-    fun onRemove(post: Post) {}
-    fun onShare(post: Post) {}
-    fun onMoveToSinglePost(post: Post) {}
+interface OnEventListener {
+    fun onLike(event: Event) {}
+    fun onEdit(event: Event) {}
+    fun onRemove(event: Event) {}
+    fun onShare(event: Event) {}
+    fun onMoveToSinglePost(event: Event) {}
 }
 
-
-class PostAdapter(
-    private val onInteractionListener: OnInteractionListener
-) : ListAdapter<Post, PostViewHolder>(PostDiffCallback) {
+class EventAdapter
+    (
+    private val onEventListener: OnEventListener
+) : ListAdapter<Event, EventViewHolder>(EventDiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): PostViewHolder {
-        val binding = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PostViewHolder(binding, onInteractionListener)
+    ): EventViewHolder {
+        val binding = CardEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return EventViewHolder(binding, onEventListener)
     }
 
     override fun onBindViewHolder(
-        holder: PostViewHolder,
+        holder: EventViewHolder,
         position: Int
     ) {
-        val post = getItem(position)
-        holder.bind(post)
+        val event = getItem(position)
+        holder.bind(event)
     }
 
 }
 
-class PostViewHolder(
-    private val binding: CardPostBinding,
-    private val onInteractionListener: OnInteractionListener
+class EventViewHolder(
+    private val binding: CardEventBinding,
+    private val onEventListener: OnEventListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(post: Post) = with(binding) {
-        cardAuthor.text = post.author
-        cardPublished.text = convertResponseToCardPost(post.published)
-        cardContent.text = post.content
+    fun bind(event: Event) = with(binding) {
+        cardAuthor.text = event.author
+        cardPublished.text = convertResponseToCardPost(event.published)
+        cardContent.text = event.content
 
-        if (!post.link.isNullOrBlank()) {
+        if (!event.link.isNullOrBlank()) {
             cardLink.visibility = View.VISIBLE
-            cardLink.text = post.link
+            cardLink.text = event.link
         } else {
             cardLink.visibility = View.GONE
         }
 
-        if (post.authorAvatar.isNullOrBlank()) {
+        if (event.authorAvatar.isNullOrBlank()) {
             cardAvatar.setImageResource(R.drawable.ic_empty_avatar_24)
         } else {
-            cardAvatar.loadAvatar(post.authorAvatar)
+            cardAvatar.loadAvatar(event.authorAvatar)
         }
 
-        if (post.likedByMe) {
+        if (event.likedByMe) {
             cardLikeButton.setIconResource(R.drawable.ic_liked_24)
         } else {
             cardLikeButton.setIconResource(R.drawable.ic_like_24)
         }
-        cardLikeButton.text = converterNumToString(post.likeOwnerIds?.size ?: 0)
+
+        cardLikeButton.text = converterNumToString(event.likeOwnerIds?.size ?: 0)
+
+        cardTypeEvent.text = event.type.toString()
+
+        cardDateEvent.text = convertResponseToCardPost(event.published)
+
+        if (!event.participantsIds.isNullOrEmpty()) {
+            cardParticipantsButton.text = event.participantsIds.size.toString()
+        } else {
+            cardParticipantsButton.text = "0"
+        }
 
         cardLikeButton.setOnClickListener {
-            onInteractionListener.onLike(post)
+            onEventListener.onLike(event)
         }
 
         cardShareButton.setOnClickListener {
-            onInteractionListener.onShare(post)
+            onEventListener.onShare(event)
         }
 
-        cardPost.setOnClickListener {
-            onInteractionListener.onMoveToSinglePost(post)
+        cardEvent.setOnClickListener {
+            onEventListener.onMoveToSinglePost(event)
         }
 
-        cardMenu.isVisible = post.ownedByMe
+        cardMenu.isVisible = event.ownedByMe
         cardMenu.setOnClickListener {
             PopupMenu(it.context, it).apply {
                 inflate(R.menu.option_post)
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.remove -> {
-                            onInteractionListener.onRemove(post)
+                            onEventListener.onRemove(event)
                             true
                         }
 
                         R.id.edit -> {
-                            onInteractionListener.onEdit(post)
+                            onEventListener.onEdit(event)
                             true
                         }
 
@@ -114,8 +124,7 @@ class PostViewHolder(
             }.show()
         }
 
-
-        when (post.attachment?.type) {
+        when (event.attachment?.type) {
 
             AttachmentType.EMPTY, null -> {
                 cardAttachment.visibility = View.GONE
@@ -125,7 +134,7 @@ class PostViewHolder(
                 cardAttachment.visibility = View.VISIBLE
                 cardAttachmentImage.visibility = View.VISIBLE
                 cardAttachmentVideo.visibility = View.GONE
-                cardAttachmentImage.loadAttachmentImage(post.attachment.url)
+                cardAttachmentImage.loadAttachmentImage(event.attachment.url)
             }
 
             AttachmentType.VIDEO -> {
@@ -134,7 +143,7 @@ class PostViewHolder(
                 cardAttachmentVideo.apply {
                     visibility = View.VISIBLE
                     setMediaController(MediaController(binding.root.context))
-                    setVideoURI(Uri.parse(post.attachment.url))
+                    setVideoURI(Uri.parse(event.attachment.url))
                     setOnPreparedListener {
                         animate().alpha(1F)
                         seekTo(0)
@@ -152,7 +161,7 @@ class PostViewHolder(
                 cardAttachmentVideo.apply {
                     visibility = View.VISIBLE
                     setMediaController(MediaController(binding.root.context))
-                    setVideoURI(Uri.parse(post.attachment.url))
+                    setVideoURI(Uri.parse(event.attachment.url))
                     setBackgroundResource(R.drawable.audio)
                     setOnPreparedListener {
                         setZOrderOnTop(true)
@@ -162,19 +171,19 @@ class PostViewHolder(
                     }
                 }
             }
-
         }
-    }
 
+    }
 }
 
-
-object PostDiffCallback : DiffUtil.ItemCallback<Post>() {
-    override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
+object EventDiffCallback : DiffUtil.ItemCallback<Event>() {
+    override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
+    override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean {
         return oldItem == newItem
     }
 }
+
+

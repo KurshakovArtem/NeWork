@@ -12,6 +12,7 @@ import android.view.ViewOutlineProvider
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
 import androidx.core.view.MenuProvider
@@ -68,24 +69,27 @@ class NewPostFragment : Fragment() {
                     menu: Menu,
                     menuInflater: MenuInflater
                 ) {
-                    menuInflater.inflate(R.menu.menu_new_post, menu)
+                    menuInflater.inflate(R.menu.menu_top_app_bar, menu)
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                     when (menuItem.itemId) {
                         R.id.save -> {
                             if (binding.edit.text.isNotBlank()) {
-                                val content = binding.edit.text.toString()
-                                viewModel.setContent(content)
-                                viewModel.setLink(binding.link.text.toString())
+                                viewModel.setContentAndLink(
+                                    binding.edit.text.toString(),
+                                    binding.link.text.toString()
+                                )
                                 viewModel.setSelectedMentionIds()
                                 AndroidUtils.hideKeyboard(requireView())
                                 viewModel.savePost()
                                 true
                             } else false
+                        }
 
-
-                            //viewModel.save(content)
+                        R.id.clear -> {
+                            viewModel.clearEditingState()
+                            true
                         }
 
                         else -> false
@@ -101,18 +105,23 @@ class NewPostFragment : Fragment() {
 
         viewModel.photo.observe(viewLifecycleOwner) { photo ->
             if (photo == null) {
-                binding.photoContainer.isGone = true
+                binding.photoContainer.visibility = View.GONE
                 return@observe
             }
             binding.photo.setImageURI(photo.uri)
-            binding.photoContainer.isVisible = true
+            binding.photoContainer.visibility = View.VISIBLE
         }
 
         binding.removePhoto.setOnClickListener {
             viewModel.removePhoto()
         }
 
+
         binding.addNewPostPhoto.setOnClickListener {
+            viewModel.setContentAndLink(
+                binding.edit.text.toString(),
+                binding.link.text.toString()
+            )
             val options = arrayOf(
                 getString(R.string.take_photo), getString(R.string.pick_photo)
             )
@@ -140,8 +149,32 @@ class NewPostFragment : Fragment() {
         }
 
         binding.addNewPostUsers.setOnClickListener {
+            viewModel.setContentAndLink(
+                binding.edit.text.toString(),
+                binding.link.text.toString()
+            )
             findNavController().navigate(R.id.action_newPostFragment_to_mentionsFragment)
         }
+
+        if (viewModel.edited.value?.id != 0L && !viewModel.mentionUsersIsTransferred){
+            val mentionsList = viewModel.edited.value?.mentionIds ?: emptyList()
+            viewModel.setMentionUsers(mentionsList)
+        }
+
+        viewModel.edited.observe(viewLifecycleOwner) { edited ->
+            binding.edit.setText(edited.content)
+            binding.link.setText(edited.link)
+            val mentionsList = edited.mentionIds
+//            mentionsList?.forEach { id ->
+//                viewModel.toggleMentionSelection(id)
+//            }
+            if (edited.id != 0L) {
+                binding.photoContainer.visibility = View.GONE
+                binding.addNewPostPhoto.visibility = View.GONE
+                binding.addNewPostAttachment.visibility = View.GONE
+            }
+        }
+
 
         val mentionsContainer = binding.mentionsPreviewContainer
 
@@ -206,11 +239,24 @@ class NewPostFragment : Fragment() {
         }
 
         binding.addNewPostLocation.setOnClickListener {
+            viewModel.setContentAndLink(
+                binding.edit.text.toString(),
+                binding.link.text.toString()
+            )
             findNavController().navigate(R.id.action_newPostFragment_to_mapFragment)
         }
 
-
-
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    viewModel.setContentAndLink(
+                        binding.edit.text.toString(),
+                        binding.link.text.toString()
+                    )
+                    findNavController().popBackStack()
+                }
+            })
 
 
 

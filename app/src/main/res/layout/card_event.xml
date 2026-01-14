@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_post"
+    android:id="@+id/card_event"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -17,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -57,10 +56,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/common_spacing"
                 android:layout_marginEnd="@dimen/common_spacing"
+                android:text="test22"
                 app:layout_constraintBottom_toBottomOf="@id/card_avatar"
                 app:layout_constraintEnd_toStartOf="@id/card_menu"
                 app:layout_constraintStart_toEndOf="@id/card_avatar"
-                android:text="test22"
                 tools:text="Дата и время" />
 
             <com.google.android.material.button.MaterialButton
@@ -84,7 +83,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
-
             <ImageView
                 android:id="@+id/card_attachment_image"
                 android:layout_width="match_parent"
@@ -102,6 +100,26 @@
                 android:contentDescription="@string/attachment_card" />
 
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/card_type_event"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_spacing"
+            android:layout_marginStart="@dimen/common_spacing"
+            android:layout_marginEnd="@dimen/common_spacing"
+            android:layout_marginBottom="@dimen/half_common_spacing"
+            android:autoLink="web"
+            tools:text="Online" />
+
+        <TextView
+            android:id="@+id/card_date_event"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            android:layout_marginEnd="@dimen/common_spacing"
+            android:autoLink="web"
+            tools:text="12.01.2026  19.00" />
 
         <TextView
             android:id="@+id/card_content"
@@ -144,6 +162,17 @@
                 app:icon="@drawable/ic_share_24"
                 app:layout_constraintStart_toEndOf="@id/card_like_button"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/card_participants_button"
+                style="@style/Style.CountButton"
+                android:contentDescription="@string/participants_button"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_people_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginEnd="@dimen/common_spacing"
+                tools:text="1111"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

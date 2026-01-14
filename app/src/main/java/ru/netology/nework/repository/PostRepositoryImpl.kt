@@ -1,8 +1,6 @@
 package ru.netology.nework.repository
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
@@ -48,7 +46,7 @@ class PostRepositoryImpl @Inject constructor(
             val body = apiService.getAllPosts()
             postDao.insert(body.toEntity())
         } catch (_: Exception) {
-
+            throw RuntimeException("Load Posts Error")
         }
     }
 
@@ -82,10 +80,19 @@ class PostRepositoryImpl @Inject constructor(
             val postFromServer =
                 apiService.save(postRequest)
 
-            postDao.insert(PostEntity.fromDto(postFromServer))
+            postDao.insert(fromDto(postFromServer))
 
         } catch (_: Exception) {
             throw RuntimeException("Save error")
+        }
+    }
+
+    override suspend fun editPost(post: Post) {
+        try {
+            val postFromServer = apiService.save(post)
+            postDao.insert(fromDto(postFromServer))
+        }catch (_ : Exception){
+            throw RuntimeException("Edit error")
         }
     }
 
@@ -110,7 +117,7 @@ class PostRepositoryImpl @Inject constructor(
             postDao.getPostById(id)?.toDto()?.likedByMe ?: throw RuntimeException("DB error")
         try {
             postDao.likeById(id)
-            val body = if (!isLiked) apiService.likeById(id) else apiService.dislikeById(id)
+            val body = if (!isLiked) apiService.likePostById(id) else apiService.dislikePostById(id)
             postDao.insert(fromDto(body))
         } catch (_: Exception) {
             postDao.likeById(id)
@@ -123,7 +130,7 @@ class PostRepositoryImpl @Inject constructor(
         val oldPost = postDao.getPostById(id)?.toDto() ?: throw RuntimeException("DB error")
         try {
             postDao.removeById(id)
-            apiService.removeById(id)
+            apiService.removePostById(id)
         } catch (_: Exception) {
             postDao.insert(fromDto(oldPost))
             throw RuntimeException("Server error")

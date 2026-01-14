@@ -56,11 +56,15 @@
     <string name="error_loading">Something went wrong. Try again later</string>
     <string name="retry_loading">Retry</string>
     <string name="menu_save">menu save</string>
+    <string name="menu_clear">menu clear</string>
     <string name="add_post_text">Add post text:</string>
     <string name="add_link">Add a link:</string>
     <string name="link">Link</string>
     <string name="permission_required">Permission required</string>
     <string name="selected_point">Selected point</string>
+    <string name="chooser_share_post">Share post</string>
+    <string name="participants_button">Participants button</string>
+    <string name="empty_events">There are no events</string>
 
 
 </resources>

@@ -15,5 +15,7 @@ interface PostRepository {
 
     suspend fun savePost(post: Post, attach: File?)
 
+    suspend fun editPost(post: Post)
+
 
 }

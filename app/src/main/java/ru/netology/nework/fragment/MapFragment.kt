@@ -57,13 +57,13 @@ class MapFragment : Fragment() {
     }
 
     private val locationObjectListener = object : UserLocationObjectListener {
-        override fun onObjectAdded(p0: UserLocationView) = Unit
+        override fun onObjectAdded(userLocationView: UserLocationView) = Unit
 
-        override fun onObjectRemoved(p0: UserLocationView) = Unit
+        override fun onObjectRemoved(userLocationView: UserLocationView) = Unit
 
         override fun onObjectUpdated(
-            p0: UserLocationView,
-            p1: ObjectEvent
+            userLocationView: UserLocationView,
+            objectEvent: ObjectEvent
         ) {
             userLocation.cameraPosition()?.target?.let {
                 mapView?.mapWindow?.map?.move(CameraPosition(it, 10F, 0F, 0F))
@@ -114,11 +114,7 @@ class MapFragment : Fragment() {
             val collection = mapWindow.map.mapObjects.addCollection()
 
             viewModel.edited.observe(viewLifecycleOwner) { post ->
-                //if (collection.isValid){
                 collection.clear()
-                //}
-                //mapWindow.map.mapObjects.clear()
-
                 val placeBinding = LocationBinding.inflate(layoutInflater)
                 if (post.coords != null) {
                     val point = Point(post.coords.lat, post.coords.long)
@@ -181,13 +177,18 @@ class MapFragment : Fragment() {
                     menu: Menu,
                     menuInflater: MenuInflater
                 ) {
-                    menuInflater.inflate(R.menu.menu_new_post, menu)
+                    menuInflater.inflate(R.menu.menu_top_app_bar, menu)
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                     when (menuItem.itemId) {
                         R.id.save -> {
                             findNavController().navigateUp()
+                            true
+                        }
+
+                        R.id.clear -> {
+                            viewModel.removeLocation()
                             true
                         }
 

@@ -1,5 +1,6 @@
 package ru.netology.nework.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,22 +8,18 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import ru.netology.nework.R
 import ru.netology.nework.adapter.OnInteractionListener
 import ru.netology.nework.adapter.PostAdapter
-import ru.netology.nework.api.PostApiService
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.databinding.FragmentPostsBinding
 import ru.netology.nework.dto.Post
 import ru.netology.nework.model.FeedErrorMassage
-import ru.netology.nework.viewmodel.AuthViewModel
 import ru.netology.nework.viewmodel.PostViewModel
 import javax.inject.Inject
 
@@ -30,7 +27,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PostsFragment : Fragment() {
     private val viewModel: PostViewModel by activityViewModels()
-    private val authViewModel: AuthViewModel by activityViewModels()
 
     @Inject
     lateinit var appAuth: AppAuth
@@ -50,14 +46,15 @@ class PostsFragment : Fragment() {
         val adapter = PostAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
                 if (appAuth.authStateFlow.value.id != 0L) {
-                    viewModel.likeById(post)
+                    viewModel.likePostById(post)
                 } else {
                     showLoginDialog()
                 }
             }
 
             override fun onEdit(post: Post) {
-                super.onEdit(post)
+                viewModel.setEditPost(post)
+                findNavController().navigate(R.id.action_postsFragment_to_newPostFragment)
             }
 
             override fun onRemove(post: Post) {
@@ -65,31 +62,27 @@ class PostsFragment : Fragment() {
             }
 
             override fun onShare(post: Post) {
-                super.onShare(post)
-            }
-
-            override fun onVideo(post: Post) {
-                super.onVideo(post)
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, post.content)
+                    type = "text/plain"
+                }
+                val shareIntent =
+                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
+                startActivity(shareIntent)
             }
 
             override fun onMoveToSinglePost(post: Post) {
                 super.onMoveToSinglePost(post)
             }
 
-            override fun onSaveRefresh(post: Post) {
-                super.onSaveRefresh(post)
-            }
-
-            override fun onMoveToSinglePhoto(post: Post) {
-                super.onMoveToSinglePhoto(post)
-            }
-
         })
 
         binding.list.adapter = adapter
 
-        viewModel.data.observe(viewLifecycleOwner) { state ->
+        viewModel.postData.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
+            binding.emptyText.isVisible = state.empty
         }
 
         binding.fabButton.setOnClickListener {
@@ -101,7 +94,7 @@ class PostsFragment : Fragment() {
         }
 
         binding.swiperefresh.setOnRefreshListener {
-            viewModel.refresh()
+            viewModel.postRefresh()
         }
 
         val bottomNav =
@@ -125,9 +118,9 @@ class PostsFragment : Fragment() {
                         .setAnchorView(bottomNav)
                         .setAction(R.string.retry_loading) {
                             val postId = state.errorReport.postIdError
-                            val post = viewModel.data.value?.posts?.find { it.id == postId }
+                            val post = viewModel.postData.value?.posts?.find { it.id == postId }
                                 ?: return@setAction
-                            viewModel.likeById(post)
+                            viewModel.likePostById(post)
                         }
                         .show()
                 }
@@ -137,9 +130,9 @@ class PostsFragment : Fragment() {
                         .setAnchorView(bottomNav)
                         .setAction(R.string.retry_loading) {
                             val postId = state.errorReport.postIdError
-                            val post = viewModel.data.value?.posts?.find { it.id == postId }
+                            val post = viewModel.postData.value?.posts?.find { it.id == postId }
                                 ?: return@setAction
-                            viewModel.likeById(post)
+                            viewModel.likePostById(post)
                         }
                         .show()
                 }
@@ -158,29 +151,11 @@ class PostsFragment : Fragment() {
                     Snackbar.make(binding.root, R.string.save_error, Snackbar.LENGTH_LONG)
                         .setAnchorView(bottomNav)
                         .setAction(R.string.retry_loading) {
-//                            val post =
-//                                viewModel.data.value?.posts?.find {
-//                                    it.id == state.errorReport.postIdError
-//                                }
-//                                    ?: throw RuntimeException("Post error")
                             viewModel.savePost()
                         }
                         .show()
                 }
 
-                FeedErrorMassage.SAVE_REFRESH_ERROR -> {
-                    Snackbar.make(binding.root, R.string.save_error, Snackbar.LENGTH_LONG)
-                        .setAnchorView(bottomNav)
-                        .setAction(R.string.retry_loading) {
-                            val post =
-                                viewModel.data.value?.posts?.find {
-                                    it.id == state.errorReport.postIdError
-                                }
-                                    ?: throw RuntimeException("Post error")
-                            // viewModel.saveRefresh(post)
-                        }
-                        .show()
-                }
 
                 null -> {} //нет смысла уведомлять об успешной операции
             }

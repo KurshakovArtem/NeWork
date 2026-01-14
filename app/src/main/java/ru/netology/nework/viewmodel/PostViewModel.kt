@@ -18,14 +18,17 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.dto.Coordinates
+import ru.netology.nework.dto.Event
 import ru.netology.nework.dto.MentionUser
 import ru.netology.nework.dto.Post
 import ru.netology.nework.dto.toMentionUser
 import ru.netology.nework.model.ErrorReport
+import ru.netology.nework.model.EventFeedModel
 import ru.netology.nework.model.FeedErrorMassage
-import ru.netology.nework.model.FeedModel
+import ru.netology.nework.model.PostFeedModel
 import ru.netology.nework.model.PhotoModel
-import ru.netology.nework.model.PostsModelState
+import ru.netology.nework.model.FeedModelState
+import ru.netology.nework.repository.EventRepository
 import ru.netology.nework.repository.PostRepository
 import ru.netology.nework.supportingFunctions.SingleLiveEvent
 import java.io.File
@@ -41,18 +44,32 @@ private val creatingPost = Post(
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val repository: PostRepository,
+    private val postRepository: PostRepository,
+    private val eventRepository: EventRepository,
     appAuth: AppAuth
 ) : ViewModel() {
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val data: LiveData<FeedModel> = appAuth
+    val postData: LiveData<PostFeedModel> = appAuth
         .authStateFlow
         .flatMapLatest { (myId, _) ->
-            repository.data.map { posts ->
-                FeedModel(
+            postRepository.data.map { posts ->
+                PostFeedModel(
                     posts.map { it.copy(ownedByMe = myId == it.authorId) }
+                )
+            }
+        }
+        .catch { it.printStackTrace() }
+        .asLiveData(Dispatchers.Default)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val eventData: LiveData<EventFeedModel> = appAuth
+        .authStateFlow
+        .flatMapLatest { (myId, _) ->
+            eventRepository.events.map { events ->
+                EventFeedModel(
+                    events.map { it.copy(ownedByMe = myId == it.authorId) }
                 )
             }
         }
@@ -69,8 +86,8 @@ class PostViewModel @Inject constructor(
     private val _mentionUsers = MutableStateFlow<List<MentionUser>>(emptyList())
     val mentionUsersFlow: StateFlow<List<MentionUser>>
         get() = _mentionUsers.asStateFlow()
-    private val _dataState = MutableLiveData<PostsModelState>()
-    val dataState: LiveData<PostsModelState>
+    private val _dataState = MutableLiveData<FeedModelState>()
+    val dataState: LiveData<FeedModelState>
         get() = _dataState
 
     private val _photo = MutableLiveData<PhotoModel?>()
@@ -93,16 +110,29 @@ class PostViewModel @Inject constructor(
     init {
         loadPosts()
         loadUsers()
+        loadEvents()
     }
 
-    fun refresh() {
+    fun postRefresh() {
         viewModelScope.launch {
-            _dataState.value = PostsModelState(refreshing = true)
+            _dataState.value = FeedModelState(refreshing = true)
             try {
-                repository.getAllPosts()
-                _dataState.value = PostsModelState()
+                postRepository.getAllPosts()
+                _dataState.value = FeedModelState()
             } catch (_: RuntimeException) {
-                _dataState.value = PostsModelState(error = true)
+                _dataState.value = FeedModelState(error = true)
+            }
+        }
+    }
+
+    fun eventsRefresh() {
+        viewModelScope.launch {
+            _dataState.value = FeedModelState(refreshing = true)
+            try {
+                eventRepository.getAllEvents()
+                _dataState.value = FeedModelState()
+            } catch (_: RuntimeException) {
+                _dataState.value = FeedModelState(error = true)
             }
         }
     }
@@ -110,12 +140,24 @@ class PostViewModel @Inject constructor(
 
     fun loadPosts() {
         viewModelScope.launch {
-            _dataState.value = PostsModelState(refreshing = true)
+            _dataState.value = FeedModelState(refreshing = true)
             try {
-                repository.getAllPosts()
-                _dataState.value = PostsModelState()
+                postRepository.getAllPosts()
+                _dataState.value = FeedModelState()
             } catch (_: RuntimeException) {
-                _dataState.value = PostsModelState(error = true)
+                _dataState.value = FeedModelState(error = true)
+            }
+        }
+    }
+
+    fun loadEvents(){
+        viewModelScope.launch {
+            _dataState.value = FeedModelState(refreshing = true)
+            try {
+                eventRepository.getAllEvents()
+                _dataState.value = FeedModelState()
+            }catch (_ : RuntimeException){
+                _dataState.value = FeedModelState(error = true)
             }
         }
     }
@@ -123,7 +165,7 @@ class PostViewModel @Inject constructor(
     fun loadUsers() {
         viewModelScope.launch {
             try {
-                val users = repository.getAllUsers()
+                val users = postRepository.getAllUsers()
                 val mention = users.map {
                     it.toMentionUser()
                 }
@@ -138,14 +180,17 @@ class PostViewModel @Inject constructor(
         val newPost = edited.value ?: return
         _postCreated.value = Unit
         viewModelScope.launch {
-            _dataState.value = PostsModelState(refreshing = true)
+            _dataState.value = FeedModelState(refreshing = true)
             try {
-                repository.savePost(newPost, _photo.value?.file)
-
-                _dataState.value = PostsModelState(errorReport = null)
+                if (newPost.id != 0L) {
+                    postRepository.editPost(newPost)
+                } else {
+                    postRepository.savePost(newPost, _photo.value?.file)
+                }
+                _dataState.value = FeedModelState(errorReport = null)
                 clearEditingState()
             } catch (_: RuntimeException) {
-                _dataState.value = PostsModelState(
+                _dataState.value = FeedModelState(
                     errorReport = ErrorReport(
                         0,
                         FeedErrorMassage.SAVE_ERROR
@@ -155,24 +200,50 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun likeById(post: Post) {
+    fun likePostById(post: Post) {
         val isLiked = post.likedByMe
         viewModelScope.launch {
             try {
-                repository.likePostById(post.id)
-                _dataState.value = PostsModelState(errorReport = null)
+                postRepository.likePostById(post.id)
+                _dataState.value = FeedModelState(errorReport = null)
             } catch (_: RuntimeException) {
                 if (!isLiked) {
-                    _dataState.value = PostsModelState(
+                    _dataState.value = FeedModelState(
                         errorReport = ErrorReport(
                             post.id,
                             FeedErrorMassage.LIKE_ERROR
                         )
                     )
                 } else {
-                    _dataState.value = PostsModelState(
+                    _dataState.value = FeedModelState(
                         errorReport = ErrorReport(
                             post.id,
+                            FeedErrorMassage.DISLIKE_ERROR
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    fun likeEventById(event: Event) {
+        val isLiked = event.likedByMe
+        viewModelScope.launch {
+            try {
+                eventRepository.likeEventById(event.id)
+                _dataState.value = FeedModelState(errorReport = null)
+            } catch (_: RuntimeException) {
+                if (!isLiked) {
+                    _dataState.value = FeedModelState(
+                        errorReport = ErrorReport(
+                            event.id,
+                            FeedErrorMassage.LIKE_ERROR
+                        )
+                    )
+                } else {
+                    _dataState.value = FeedModelState(
+                        errorReport = ErrorReport(
+                            event.id,
                             FeedErrorMassage.DISLIKE_ERROR
                         )
                     )
@@ -184,10 +255,26 @@ class PostViewModel @Inject constructor(
     fun removePostById(id: Long) {
         viewModelScope.launch {
             try {
-                repository.removePostsBiId(id)
-                _dataState.value = PostsModelState(errorReport = null)
+                postRepository.removePostsBiId(id)
+                _dataState.value = FeedModelState(errorReport = null)
             } catch (_: RuntimeException) {
-                _dataState.value = PostsModelState(
+                _dataState.value = FeedModelState(
+                    errorReport = ErrorReport(
+                        id,
+                        FeedErrorMassage.REMOVE_ERROR
+                    )
+                )
+            }
+        }
+    }
+
+    fun removeEventById(id: Long) {
+        viewModelScope.launch {
+            try {
+                eventRepository.removeEventBiId(id)
+                _dataState.value = FeedModelState(errorReport = null)
+            } catch (_: RuntimeException) {
+                _dataState.value = FeedModelState(
                     errorReport = ErrorReport(
                         id,
                         FeedErrorMassage.REMOVE_ERROR
@@ -205,19 +292,24 @@ class PostViewModel @Inject constructor(
         _photo.value = null
     }
 
-    fun setContent(content: String) {
-        if (edited.value?.content == content.trim()) return
-        _edited.value = edited.value?.copy(content = content.trim())
+    fun setEditPost(post: Post) {
+        _edited.value = post
+        mentionUsersIsTransferred = false
     }
 
-    fun setLink(link: String) {
+    fun setContentAndLink(content: String, link: String) {
         val linkText = if (link.isBlank()) {
             null
         } else {
             link.trim()
         }
-        _edited.value = edited.value?.copy(link = linkText)
+        if (edited.value?.content == content.trim()) {
+            _edited.value = edited.value?.copy(link = linkText)
+        } else {
+            _edited.value = edited.value?.copy(content = content.trim(), link = linkText)
+        }
     }
+
 
     fun toggleMentionSelection(userId: Long) {
         val currentList = _mentionUsers.value
@@ -225,6 +317,18 @@ class PostViewModel @Inject constructor(
             if (user.id == userId) user.copy(isSelected = !user.isSelected) else user
         }
         _mentionUsers.value = updatedList
+    }
+
+    // флаг для загрузки списка упомянутых пользователей
+    var mentionUsersIsTransferred: Boolean = false
+
+    fun setMentionUsers(users: List<Long>) {
+        val currentList = _mentionUsers.value
+        val updatedList = currentList.map { user ->
+            if (users.find { it == user.id } != null) user.copy(isSelected = true) else user
+        }
+        _mentionUsers.value = updatedList
+        mentionUsersIsTransferred = true
     }
 
     fun setSelectedMentionIds() {
@@ -240,10 +344,15 @@ class PostViewModel @Inject constructor(
         _edited.value = edited.value?.copy(coords = null)
     }
 
-    private fun clearEditingState() {
+    fun clearMentionsList() {
+        _mentionUsers.value = _mentionUsers.value.map { it.copy(isSelected = false) }
+    }
+
+    fun clearEditingState() {
         _edited.value = creatingPost
         _photo.value = null
         _mentionUsers.value = _mentionUsers.value.map { it.copy(isSelected = false) }
+        mentionUsersIsTransferred = false
     }
 
 

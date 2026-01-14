@@ -20,9 +20,7 @@ import ru.netology.nework.R
 import ru.netology.nework.adapter.MentionAdapter
 import ru.netology.nework.adapter.OnMentionListener
 import ru.netology.nework.databinding.FragmentMentionBinding
-import ru.netology.nework.databinding.FragmentPostsBinding
 import ru.netology.nework.dto.MentionUser
-import ru.netology.nework.supportingFunctions.AndroidUtils
 import ru.netology.nework.viewmodel.PostViewModel
 import kotlin.getValue
 
@@ -68,13 +66,17 @@ class MentionsFragment : Fragment() {
                     menu: Menu,
                     menuInflater: MenuInflater
                 ) {
-                    menuInflater.inflate(R.menu.menu_new_post, menu)
+                    menuInflater.inflate(R.menu.menu_top_app_bar, menu)
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                     when (menuItem.itemId) {
                         R.id.save -> {
                             findNavController().navigateUp()
+                            true
+                        }
+                        R.id.clear -> {
+                            viewModel.clearMentionsList()
                             true
                         }
 

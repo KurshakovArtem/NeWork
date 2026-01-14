@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.netology.nework.dao.EventDao
 import ru.netology.nework.dao.PostDao
 import ru.netology.nework.dao.UserDao
 import ru.netology.nework.db.AppDb
@@ -17,4 +18,7 @@ object DaoModule {
 
     @Provides
     fun provideUserDao(db: AppDb): UserDao = db.userDao
+
+    @Provides
+    fun provideEventDao(db: AppDb) : EventDao = db.eventDao
 }

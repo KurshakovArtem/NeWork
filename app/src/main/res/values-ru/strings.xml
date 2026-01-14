@@ -56,11 +56,15 @@
     <string name="dislike_error">Ошибка удаления Like</string>
     <string name="error_loading">Что-то пошло не так. Попробуйте позже.</string>
     <string name="retry_loading">Повторить</string>
-    <string name="menu_save">menu save</string>
+    <string name="menu_save">меню сохранить</string>
+    <string name="menu_clear">меню очистить</string>
     <string name="add_post_text">Добавте текст поста:</string>
     <string name="add_link">Добавте ссылку:</string>
     <string name="link">Ссылка</string>
     <string name="permission_required">Необходимо разрешение</string>
     <string name="selected_point">Выбранная точка</string>
+    <string name="chooser_share_post">Поделиться</string>
+    <string name="participants_button">Кнопка участников</string>
+    <string name="empty_events">Нет событий</string>
 
 </resources>
