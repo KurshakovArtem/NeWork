@@ -29,6 +29,7 @@ import ru.netology.nework.model.FeedErrorMassage
 import ru.netology.nework.model.PostFeedModel
 import ru.netology.nework.model.PhotoModel
 import ru.netology.nework.model.FeedModelState
+import ru.netology.nework.model.UserFeedModel
 import ru.netology.nework.repository.EventRepository
 import ru.netology.nework.repository.PostRepository
 import ru.netology.nework.supportingFunctions.SingleLiveEvent
@@ -70,7 +71,10 @@ class PostViewModel @Inject constructor(
                 )
             }
         }
-        .catch { it.printStackTrace() }
+        .catch {
+            _dataState.value = FeedModelState(error = true)
+            it.printStackTrace()
+        }
         .asLiveData(Dispatchers.Default)
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -83,8 +87,19 @@ class PostViewModel @Inject constructor(
                 )
             }
         }
-        .catch { it.printStackTrace() }
+        .catch {
+            _dataState.value = FeedModelState(error = true)
+            it.printStackTrace()
+        }
         .asLiveData(Dispatchers.Default)
+
+    val userData: LiveData<UserFeedModel> = postRepository.usersData
+        .map(::UserFeedModel)
+        .catch {
+            _dataState.value = FeedModelState(error = true)
+            it.printStackTrace()
+        }
+        .asLiveData()
 
 
     /*
@@ -165,7 +180,17 @@ class PostViewModel @Inject constructor(
         }
     }
 
-
+    fun usersRefresh() {
+        viewModelScope.launch {
+            _dataState.value = FeedModelState(refreshing = true)
+            try {
+                postRepository.getAllUsers()
+                _dataState.value = FeedModelState()
+            } catch (_: RuntimeException) {
+                _dataState.value = FeedModelState(error = true)
+            }
+        }
+    }
     fun loadPosts() {
         viewModelScope.launch {
             _dataState.value = FeedModelState(refreshing = true)
@@ -178,13 +203,13 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun loadEvents(){
+    fun loadEvents() {
         viewModelScope.launch {
             _dataState.value = FeedModelState(refreshing = true)
             try {
                 eventRepository.getAllEvents()
                 _dataState.value = FeedModelState()
-            }catch (_ : RuntimeException){
+            } catch (_: RuntimeException) {
                 _dataState.value = FeedModelState(error = true)
             }
         }
@@ -229,7 +254,7 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun saveEvent(){
+    fun saveEvent() {
         val newEvent = eventEdited.value ?: return
         _eventCreated.value = Unit
         viewModelScope.launch {
@@ -305,13 +330,13 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun addParticipantsById(event: Event){
+    fun addParticipantsById(event: Event) {
         val isParticipatedByMe = event.participatedByMe
         viewModelScope.launch {
             try {
                 eventRepository.participantsById(event.id)
                 _dataState.value = FeedModelState(errorReport = null)
-            } catch (_ : RuntimeException){
+            } catch (_: RuntimeException) {
                 _dataState.value = FeedModelState(
                     errorReport = ErrorReport(
                         event.id,
@@ -375,7 +400,7 @@ class PostViewModel @Inject constructor(
         mentionUsersIsTransferred = false
     }
 
-    fun setEditEvent(event: Event){
+    fun setEditEvent(event: Event) {
         _eventEdited.value = event
         speakerUsersIsTransferred = false
     }
@@ -492,11 +517,11 @@ class PostViewModel @Inject constructor(
         speakerUsersIsTransferred = false
     }
 
-    fun setEventType(eventType: EventType){
+    fun setEventType(eventType: EventType) {
         _eventEdited.value = _eventEdited.value?.copy(type = eventType)
     }
 
-    fun setEventDateTime(date: String){
+    fun setEventDateTime(date: String) {
         _eventEdited.value = _eventEdited.value?.copy(datetime = date)
     }
 

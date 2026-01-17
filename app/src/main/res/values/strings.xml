@@ -80,5 +80,12 @@
     <string name="next">Next</string>
     <string name="select_time">Select time</string>
     <string name="select">Select</string>
+    <string name="data_incomplete">Data is incomplete</string>
+    <string name="incomplete_event_alert">You cannot create an event without specifying a date, time, or with an empty content.</string>
+    <string name="understood">Understood</string>
+    <string name="empty_users">There are no users.</string>
+    <string name="new_post">New post</string>
+    <string name="new_event">New Event</string>
+    <string name="map">Map</string>
 
 </resources>

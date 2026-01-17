@@ -4,14 +4,13 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -23,8 +22,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nework.R
 import ru.netology.nework.auth.AppAuth
@@ -38,21 +35,16 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var appAuth: AppAuth
-
-
-
     private val viewModel: AuthViewModel by viewModels()
     private val postViewModel: PostViewModel by viewModels()
 
     private lateinit var navController: NavController
     private lateinit var bottomNav: BottomNavigationView
-
+    private var currentDestinationId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -81,18 +73,31 @@ class MainActivity : AppCompatActivity() {
             AppBarConfiguration(setOf(R.id.postsFragment, R.id.eventsFragment, R.id.usersFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            currentDestinationId = destination.id
+
             val isMainScreen = destination.id == R.id.postsFragment ||
                     destination.id == R.id.eventsFragment ||
                     destination.id == R.id.usersFragment
             bottomNav.isVisible = isMainScreen
+
+            supportActionBar?.title = when (destination.id) {
+                R.id.postsFragment -> getString(R.string.posts)
+                R.id.eventsFragment -> getString(R.string.events)
+                R.id.usersFragment -> getString(R.string.users)
+                R.id.newPostFragment -> getString(R.string.new_post)
+                R.id.newEventFragment -> getString(R.string.new_event)
+                R.id.signInFragment -> getString(R.string.login)
+                R.id.signUpFragment -> getString(R.string.registration)
+                R.id.mapFragment -> getString(R.string.map)
+                R.id.mentionsFragment -> getString(R.string.users)
+
+
+                else -> getString(R.string.app_name)
+            }
+            invalidateOptionsMenu()
         }
-
-
-        supportActionBar?.let { actionBar ->
-            actionBar.title = getString(R.string.app_name)
-        }
-
 
 
         viewModel.data.observe(this) {
@@ -133,8 +138,19 @@ class MainActivity : AppCompatActivity() {
 
             }
         )
+    }
 
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        super.onPrepareOptionsMenu(menu)
 
+        val isMainScreen = currentDestinationId == R.id.postsFragment ||
+                currentDestinationId == R.id.eventsFragment ||
+                currentDestinationId == R.id.usersFragment
+
+        menu.setGroupVisible(R.id.authenticated, isMainScreen && viewModel.isAuthorized)
+        menu.setGroupVisible(R.id.unauthenticated, isMainScreen && !viewModel.isAuthorized)
+
+        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {

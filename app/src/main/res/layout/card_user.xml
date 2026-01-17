@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_user"
+    android:clickable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardBackgroundColor="#CAC4D0"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="5dp"
+    app:strokeColor="@color/gray"
+    app:strokeWidth="1dp"
+    tools:context=".activity.MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/half_common_spacing">
+
+        <ImageView
+            android:id="@+id/user_card_avatar"
+            android:layout_width="@dimen/posts_avatar_size"
+            android:layout_height="@dimen/posts_avatar_size"
+            android:contentDescription="@string/author_avatar"
+            android:src="@drawable/ic_loading_100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars[4]" />
+
+        <TextView
+            android:id="@+id/user_card_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/user_card_login"
+            app:layout_constraintStart_toEndOf="@id/user_card_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingStart="@dimen/double_common_spacing"
+            tools:text="Author" />
+
+        <TextView
+            android:id="@+id/user_card_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/user_card_avatar"
+            app:layout_constraintTop_toBottomOf="@id/user_card_author"
+            android:paddingStart="@dimen/double_common_spacing"
+            tools:text="Login" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

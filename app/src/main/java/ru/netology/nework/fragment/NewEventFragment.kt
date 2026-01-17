@@ -25,6 +25,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
@@ -70,7 +71,9 @@ class NewEventFragment : Fragment() {
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                     when (menuItem.itemId) {
                         R.id.save -> {
-                            if (binding.edit.text.isNotBlank()) {
+                            if (binding.edit.text.isNotBlank()
+                                && !viewModel.eventEdited.value?.datetime.isNullOrBlank()
+                            ) {
                                 viewModel.setEventContentAndLink(
                                     binding.edit.text.toString(),
                                     binding.link.text.toString()
@@ -79,7 +82,10 @@ class NewEventFragment : Fragment() {
                                 AndroidUtils.hideKeyboard(requireView())
                                 viewModel.saveEvent()
                                 true
-                            } else false
+                            } else {
+                                showDateRequiredDialog()
+                                false
+                            }
                         }
 
                         R.id.clear -> {
@@ -97,7 +103,7 @@ class NewEventFragment : Fragment() {
         }
 
         binding.buttonNewEventPanel.setPadding(0, 0, 0, viewModel.padding)
-        val fabParams =  binding.fabButton.layoutParams as ConstraintLayout.LayoutParams
+        val fabParams = binding.fabButton.layoutParams as ConstraintLayout.LayoutParams
         fabParams.setMargins(0, 0, 0, viewModel.padding)
         binding.fabButton.layoutParams = fabParams
 
@@ -250,7 +256,7 @@ class NewEventFragment : Fragment() {
                 }
             })
 
-        viewModel.saveBeforeBack.observe(viewLifecycleOwner){
+        viewModel.saveBeforeBack.observe(viewLifecycleOwner) {
             viewModel.setEventContentAndLink(
                 binding.edit.text.toString(),
                 binding.link.text.toString()
@@ -268,5 +274,16 @@ class NewEventFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    private fun showDateRequiredDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.data_incomplete))
+            .setMessage(getString(R.string.incomplete_event_alert))
+            .setPositiveButton(R.string.understood) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
     }
 }

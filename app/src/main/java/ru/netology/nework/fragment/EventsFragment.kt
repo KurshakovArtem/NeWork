@@ -62,7 +62,8 @@ class EventsFragment : Fragment() {
             }
 
             override fun onEdit(event: Event) {
-                super.onEdit(event)
+                viewModel.setEditEvent(event)
+                findNavController().navigate(R.id.action_eventsFragment_to_newEventFragment)
             }
 
             override fun onRemove(event: Event) {

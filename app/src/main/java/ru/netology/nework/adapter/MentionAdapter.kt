@@ -18,7 +18,7 @@ interface OnMentionListener {
 
 class MentionAdapter(
     private val onMentionListener: OnMentionListener
-) : ListAdapter<MentionUser, MentionViewHolder>(UserDiffCallback) {
+) : ListAdapter<MentionUser, MentionViewHolder>(MentionUserDiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -58,11 +58,10 @@ class MentionViewHolder(
             onMentionListener.onUserSelected(user, isChecked)
         }
     }
-
 }
 
 
-object UserDiffCallback : DiffUtil.ItemCallback<MentionUser>() {
+object MentionUserDiffCallback : DiffUtil.ItemCallback<MentionUser>() {
     override fun areItemsTheSame(oldItem: MentionUser, newItem: MentionUser): Boolean {
         return oldItem.id == newItem.id
     }

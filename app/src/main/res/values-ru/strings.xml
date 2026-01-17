@@ -81,5 +81,12 @@
     <string name="next">Далее</string>
     <string name="select_time">Выберите время</string>
     <string name="select">Выбрать</string>
+    <string name="data_incomplete">Данные неполные</string>
+    <string name="incomplete_event_alert">Нельзя создать событие без указания даты, времени проведения или с пустым контетом.</string>
+    <string name="understood">Понял</string>
+    <string name="empty_users">Нет ни одного пользователя.</string>
+    <string name="new_post">Новый пост</string>
+    <string name="new_event">Новое событие</string>
+    <string name="map">Карта</string>
 
 </resources>
