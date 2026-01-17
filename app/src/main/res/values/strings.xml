@@ -65,6 +65,20 @@
     <string name="chooser_share_post">Share post</string>
     <string name="participants_button">Participants button</string>
     <string name="empty_events">There are no events</string>
-
+    <string name="participants_error">Error adding participants</string>
+    <string name="add_event_text">Add event text</string>
+    <string name="event_text">Event text</string>
+    <string name="date">Date</string>
+    <string name="date_input_type">MM/dd/yyyy HH:mm</string>
+    <string name="select_date">Select date and time</string>
+    <string name="type">Type</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="done">Done</string>
+    <string name="add_date_and_type">Add date and type</string>
+    <string name="select_event_date">Select event date</string>
+    <string name="next">Next</string>
+    <string name="select_time">Select time</string>
+    <string name="select">Select</string>
 
 </resources>

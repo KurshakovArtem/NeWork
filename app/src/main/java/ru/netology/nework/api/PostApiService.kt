@@ -18,6 +18,7 @@ import retrofit2.http.Path
 import ru.netology.nework.BuildConfig
 import ru.netology.nework.dto.AuthState
 import ru.netology.nework.dto.Event
+import ru.netology.nework.dto.EventRequest
 import ru.netology.nework.dto.Media
 import ru.netology.nework.dto.Post
 import ru.netology.nework.dto.PostRequest
@@ -60,6 +61,12 @@ interface PostApiService {
     @DELETE("events/{id}/likes")
     suspend fun dislikeEventById(@Path("id") id: Long): Event
 
+    @POST("events/{id}/participants")
+    suspend fun addParticipantsById(@Path("id") id: Long): Event
+
+    @DELETE("events/{id}/participants")
+    suspend fun removeParticipantsById(@Path("id") id: Long): Event
+
     @DELETE("posts/{id}")
     suspend fun removePostById(@Path("id") id: Long)
 
@@ -95,10 +102,16 @@ interface PostApiService {
     suspend fun upload(@Part media: MultipartBody.Part): Media
 
     @POST("posts")
-    suspend fun save(@Body post: PostRequest): Post
+    suspend fun savePost(@Body post: PostRequest): Post
 
     @POST("posts")
-    suspend fun save(@Body post: Post): Post
+    suspend fun savePost(@Body post: Post): Post
+
+    @POST("events")
+    suspend fun saveEvent(@Body event: EventRequest): Event
+
+    @POST("events")
+    suspend fun saveEvent(@Body event: Event): Event
 
     @GET("users")
     suspend fun getAllUsers(): List<User>

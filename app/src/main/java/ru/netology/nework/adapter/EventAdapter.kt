@@ -18,9 +18,11 @@ import ru.netology.nework.supportingFunctions.convertResponseToCardPost
 import ru.netology.nework.supportingFunctions.converterNumToString
 import ru.netology.nework.supportingFunctions.loadAttachmentImage
 import ru.netology.nework.supportingFunctions.loadAvatar
+import androidx.core.net.toUri
 
 interface OnEventListener {
     fun onLike(event: Event) {}
+    fun onParticipants(event: Event) {}
     fun onEdit(event: Event) {}
     fun onRemove(event: Event) {}
     fun onShare(event: Event) {}
@@ -78,6 +80,12 @@ class EventViewHolder(
             cardLikeButton.setIconResource(R.drawable.ic_like_24)
         }
 
+        if (event.participatedByMe) {
+            cardParticipantsButton.setIconResource(R.drawable.ic_people_24)
+        }else{
+            cardParticipantsButton.setIconResource(R.drawable.ic_people_outline_24)
+        }
+
         cardLikeButton.text = converterNumToString(event.likeOwnerIds?.size ?: 0)
 
         cardTypeEvent.text = event.type.toString()
@@ -100,6 +108,10 @@ class EventViewHolder(
 
         cardEvent.setOnClickListener {
             onEventListener.onMoveToSinglePost(event)
+        }
+
+        cardParticipantsButton.setOnClickListener {
+            onEventListener.onParticipants(event)
         }
 
         cardMenu.isVisible = event.ownedByMe
@@ -143,7 +155,7 @@ class EventViewHolder(
                 cardAttachmentVideo.apply {
                     visibility = View.VISIBLE
                     setMediaController(MediaController(binding.root.context))
-                    setVideoURI(Uri.parse(event.attachment.url))
+                    setVideoURI(event.attachment.url.toUri())
                     setOnPreparedListener {
                         animate().alpha(1F)
                         seekTo(0)
@@ -161,7 +173,7 @@ class EventViewHolder(
                 cardAttachmentVideo.apply {
                     visibility = View.VISIBLE
                     setMediaController(MediaController(binding.root.context))
-                    setVideoURI(Uri.parse(event.attachment.url))
+                    setVideoURI(event.attachment.url.toUri())
                     setBackgroundResource(R.drawable.audio)
                     setOnPreparedListener {
                         setZOrderOnTop(true)

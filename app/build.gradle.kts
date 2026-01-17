@@ -110,6 +110,5 @@ dependencies {
     ksp(libs.dagger.hilt.compiler)
     implementation(libs.desugaring)
     implementation(libs.maps.mobile)
-
-
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 }

@@ -22,6 +22,7 @@ import ru.netology.nework.dto.Event
 import ru.netology.nework.dto.MentionUser
 import ru.netology.nework.dto.Post
 import ru.netology.nework.dto.toMentionUser
+import ru.netology.nework.enumeration.EventType
 import ru.netology.nework.model.ErrorReport
 import ru.netology.nework.model.EventFeedModel
 import ru.netology.nework.model.FeedErrorMassage
@@ -40,6 +41,15 @@ private val creatingPost = Post(
     author = "",
     content = "",
     published = "",
+)
+
+private val creatingEvent = Event(
+    id = 0,
+    authorId = 0,
+    author = "",
+    content = "",
+    published = "",
+    datetime = "",
 )
 
 @HiltViewModel
@@ -86,17 +96,29 @@ class PostViewModel @Inject constructor(
     private val _mentionUsers = MutableStateFlow<List<MentionUser>>(emptyList())
     val mentionUsersFlow: StateFlow<List<MentionUser>>
         get() = _mentionUsers.asStateFlow()
+
+    private val _speakerUsers = MutableStateFlow<List<MentionUser>>(emptyList())
+    val speakerUsersFlow: StateFlow<List<MentionUser>>
+        get() = _speakerUsers.asStateFlow()
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
         get() = _dataState
 
-    private val _photo = MutableLiveData<PhotoModel?>()
-    val photo: LiveData<PhotoModel?>
-        get() = _photo
+    private val _postPhoto = MutableLiveData<PhotoModel?>()
+    val postPhoto: LiveData<PhotoModel?>
+        get() = _postPhoto
 
-    private val _edited = MutableLiveData(creatingPost)
-    val edited: LiveData<Post>
-        get() = _edited
+    private val _eventPhoto = MutableLiveData<PhotoModel?>()
+    val eventPhoto: LiveData<PhotoModel?>
+        get() = _eventPhoto
+
+    private val _postEdited = MutableLiveData(creatingPost)
+    val postEdited: LiveData<Post>
+        get() = _postEdited
+
+    private val _eventEdited = MutableLiveData(creatingEvent)
+    val eventEdited: LiveData<Event>
+        get() = _eventEdited
 
     private val _locationState = MutableLiveData<Coordinates?>()
     val locationState: LiveData<Coordinates?>
@@ -105,6 +127,12 @@ class PostViewModel @Inject constructor(
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
+
+    private val _eventCreated = SingleLiveEvent<Unit>()
+    val eventCreated: LiveData<Unit>
+        get() = _eventCreated
+
+    val saveBeforeBack = MutableLiveData(false)
 
 
     init {
@@ -170,6 +198,7 @@ class PostViewModel @Inject constructor(
                     it.toMentionUser()
                 }
                 _mentionUsers.value = mention
+                _speakerUsers.value = mention
             } catch (_: RuntimeException) {
 
             }
@@ -177,7 +206,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun savePost() {
-        val newPost = edited.value ?: return
+        val newPost = postEdited.value ?: return
         _postCreated.value = Unit
         viewModelScope.launch {
             _dataState.value = FeedModelState(refreshing = true)
@@ -185,10 +214,34 @@ class PostViewModel @Inject constructor(
                 if (newPost.id != 0L) {
                     postRepository.editPost(newPost)
                 } else {
-                    postRepository.savePost(newPost, _photo.value?.file)
+                    postRepository.savePost(newPost, _postPhoto.value?.file)
                 }
                 _dataState.value = FeedModelState(errorReport = null)
-                clearEditingState()
+                clearPostEditingState()
+            } catch (_: RuntimeException) {
+                _dataState.value = FeedModelState(
+                    errorReport = ErrorReport(
+                        0,
+                        FeedErrorMassage.SAVE_ERROR
+                    )
+                )
+            }
+        }
+    }
+
+    fun saveEvent(){
+        val newEvent = eventEdited.value ?: return
+        _eventCreated.value = Unit
+        viewModelScope.launch {
+            _dataState.value = FeedModelState(refreshing = true)
+            try {
+                if (newEvent.id != 0L) {
+                    eventRepository.editEvent(newEvent)
+                } else {
+                    eventRepository.saveEvent(newEvent, _eventPhoto.value?.file)
+                }
+                _dataState.value = FeedModelState(errorReport = null)
+                clearEventEditingState()
             } catch (_: RuntimeException) {
                 _dataState.value = FeedModelState(
                     errorReport = ErrorReport(
@@ -252,6 +305,23 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun addParticipantsById(event: Event){
+        val isParticipatedByMe = event.participatedByMe
+        viewModelScope.launch {
+            try {
+                eventRepository.participantsById(event.id)
+                _dataState.value = FeedModelState(errorReport = null)
+            } catch (_ : RuntimeException){
+                _dataState.value = FeedModelState(
+                    errorReport = ErrorReport(
+                        event.id,
+                        FeedErrorMassage.PARTICIPANTS_ERROR
+                    )
+                )
+            }
+        }
+    }
+
     fun removePostById(id: Long) {
         viewModelScope.launch {
             try {
@@ -284,32 +354,57 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun updatePhoto(uri: Uri, file: File) {
-        _photo.value = PhotoModel(uri, file)
+    fun updatePostPhoto(uri: Uri, file: File) {
+        _postPhoto.value = PhotoModel(uri, file)
     }
 
-    fun removePhoto() {
-        _photo.value = null
+    fun removePostPhoto() {
+        _postPhoto.value = null
+    }
+
+    fun updateEventPhoto(uri: Uri, file: File) {
+        _eventPhoto.value = PhotoModel(uri, file)
+    }
+
+    fun removeEventPhoto() {
+        _eventPhoto.value = null
     }
 
     fun setEditPost(post: Post) {
-        _edited.value = post
+        _postEdited.value = post
         mentionUsersIsTransferred = false
     }
 
-    fun setContentAndLink(content: String, link: String) {
+    fun setEditEvent(event: Event){
+        _eventEdited.value = event
+        speakerUsersIsTransferred = false
+    }
+
+    fun setPostContentAndLink(content: String, link: String) {
         val linkText = if (link.isBlank()) {
             null
         } else {
             link.trim()
         }
-        if (edited.value?.content == content.trim()) {
-            _edited.value = edited.value?.copy(link = linkText)
+        if (postEdited.value?.content == content.trim()) {
+            _postEdited.value = postEdited.value?.copy(link = linkText)
         } else {
-            _edited.value = edited.value?.copy(content = content.trim(), link = linkText)
+            _postEdited.value = postEdited.value?.copy(content = content.trim(), link = linkText)
         }
     }
 
+    fun setEventContentAndLink(content: String, link: String) {
+        val linkText = if (link.isBlank()) {
+            null
+        } else {
+            link.trim()
+        }
+        if (eventEdited.value?.content == content.trim()) {
+            _eventEdited.value = eventEdited.value?.copy(link = linkText)
+        } else {
+            _eventEdited.value = eventEdited.value?.copy(content = content.trim(), link = linkText)
+        }
+    }
 
     fun toggleMentionSelection(userId: Long) {
         val currentList = _mentionUsers.value
@@ -319,8 +414,17 @@ class PostViewModel @Inject constructor(
         _mentionUsers.value = updatedList
     }
 
+    fun toggleSpeakerSelection(userId: Long) {
+        val currentList = _speakerUsers.value
+        val updatedList = currentList.map { user ->
+            if (user.id == userId) user.copy(isSelected = !user.isSelected) else user
+        }
+        _speakerUsers.value = updatedList
+    }
+
     // флаг для загрузки списка упомянутых пользователей
     var mentionUsersIsTransferred: Boolean = false
+    var speakerUsersIsTransferred: Boolean = false
 
     fun setMentionUsers(users: List<Long>) {
         val currentList = _mentionUsers.value
@@ -331,29 +435,69 @@ class PostViewModel @Inject constructor(
         mentionUsersIsTransferred = true
     }
 
+    fun setSpeakerUsers(users: List<Long>) {
+        val currentList = _speakerUsers.value
+        val updatedList = currentList.map { user ->
+            if (users.find { it == user.id } != null) user.copy(isSelected = true) else user
+        }
+        _speakerUsers.value = updatedList
+        speakerUsersIsTransferred = true
+    }
+
     fun setSelectedMentionIds() {
         val mentionsIdList = _mentionUsers.value.filter { it.isSelected }.map { it.id }
-        _edited.value = edited.value?.copy(mentionIds = mentionsIdList)
+        _postEdited.value = postEdited.value?.copy(mentionIds = mentionsIdList)
     }
 
-    fun setLocation(lat: Double, long: Double) {
-        _edited.value = edited.value?.copy(coords = Coordinates(lat, long))
+    fun setSelectedSpeakerIds() {
+        val speakerIdList = _speakerUsers.value.filter { it.isSelected }.map { it.id }
+        _eventEdited.value = eventEdited.value?.copy(speakerIds = speakerIdList)
     }
 
-    fun removeLocation() {
-        _edited.value = edited.value?.copy(coords = null)
+    fun setPostLocation(lat: Double, long: Double) {
+        _postEdited.value = postEdited.value?.copy(coords = Coordinates(lat, long))
+    }
+
+    fun removePostLocation() {
+        _postEdited.value = postEdited.value?.copy(coords = null)
+    }
+
+    fun setEventLocation(lat: Double, long: Double) {
+        _eventEdited.value = eventEdited.value?.copy(coords = Coordinates(lat, long))
+    }
+
+    fun removeEventLocation() {
+        _eventEdited.value = eventEdited.value?.copy(coords = null)
     }
 
     fun clearMentionsList() {
         _mentionUsers.value = _mentionUsers.value.map { it.copy(isSelected = false) }
     }
 
-    fun clearEditingState() {
-        _edited.value = creatingPost
-        _photo.value = null
+    fun clearSpeakerList() {
+        _speakerUsers.value = _speakerUsers.value.map { it.copy(isSelected = false) }
+    }
+
+    fun clearPostEditingState() {
+        _postEdited.value = creatingPost
+        _postPhoto.value = null
         _mentionUsers.value = _mentionUsers.value.map { it.copy(isSelected = false) }
         mentionUsersIsTransferred = false
     }
 
+    fun clearEventEditingState() {
+        _eventEdited.value = creatingEvent
+        _eventPhoto.value = null
+        _speakerUsers.value = _speakerUsers.value.map { it.copy(isSelected = false) }
+        speakerUsersIsTransferred = false
+    }
+
+    fun setEventType(eventType: EventType){
+        _eventEdited.value = _eventEdited.value?.copy(type = eventType)
+    }
+
+    fun setEventDateTime(date: String){
+        _eventEdited.value = _eventEdited.value?.copy(datetime = date)
+    }
 
 }

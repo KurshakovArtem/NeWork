@@ -78,7 +78,7 @@ class PostRepositoryImpl @Inject constructor(
             )
 
             val postFromServer =
-                apiService.save(postRequest)
+                apiService.savePost(postRequest)
 
             postDao.insert(fromDto(postFromServer))
 
@@ -89,7 +89,7 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun editPost(post: Post) {
         try {
-            val postFromServer = apiService.save(post)
+            val postFromServer = apiService.savePost(post)
             postDao.insert(fromDto(postFromServer))
         }catch (_ : Exception){
             throw RuntimeException("Edit error")
@@ -136,6 +136,4 @@ class PostRepositoryImpl @Inject constructor(
             throw RuntimeException("Server error")
         }
     }
-
-
 }

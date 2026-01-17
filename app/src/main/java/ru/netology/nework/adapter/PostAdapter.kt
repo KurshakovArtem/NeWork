@@ -18,6 +18,7 @@ import ru.netology.nework.supportingFunctions.convertResponseToCardPost
 import ru.netology.nework.supportingFunctions.converterNumToString
 import ru.netology.nework.supportingFunctions.loadAttachmentImage
 import ru.netology.nework.supportingFunctions.loadAvatar
+import androidx.core.net.toUri
 
 
 interface OnInteractionListener {
@@ -134,7 +135,7 @@ class PostViewHolder(
                 cardAttachmentVideo.apply {
                     visibility = View.VISIBLE
                     setMediaController(MediaController(binding.root.context))
-                    setVideoURI(Uri.parse(post.attachment.url))
+                    setVideoURI(post.attachment.url.toUri())
                     setOnPreparedListener {
                         animate().alpha(1F)
                         seekTo(0)
@@ -152,7 +153,7 @@ class PostViewHolder(
                 cardAttachmentVideo.apply {
                     visibility = View.VISIBLE
                     setMediaController(MediaController(binding.root.context))
-                    setVideoURI(Uri.parse(post.attachment.url))
+                    setVideoURI(post.attachment.url.toUri())
                     setBackgroundResource(R.drawable.audio)
                     setOnPreparedListener {
                         setZOrderOnTop(true)

@@ -66,5 +66,20 @@
     <string name="chooser_share_post">Поделиться</string>
     <string name="participants_button">Кнопка участников</string>
     <string name="empty_events">Нет событий</string>
+    <string name="participants_error">Ошибка добавления участников</string>
+    <string name="add_event_text">Добавить текст события</string>
+    <string name="event_text">Текст события</string>
+    <string name="date">Дата</string>
+    <string name="date_input_type">ММ/дд/гггг ЧЧ:мм</string>
+    <string name="select_date">Выбрать дату и время</string>
+    <string name="type">Тип</string>
+    <string name="online">Онлайн</string>
+    <string name="offline">Офлайн</string>
+    <string name="done">Готово</string>
+    <string name="add_date_and_type">Добавить дату и тип</string>
+    <string name="select_event_date">Выберите дату события</string>
+    <string name="next">Далее</string>
+    <string name="select_time">Выберите время</string>
+    <string name="select">Выбрать</string>
 
 </resources>

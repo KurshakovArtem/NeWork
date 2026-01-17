@@ -56,7 +56,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/common_spacing"
                 android:layout_marginEnd="@dimen/common_spacing"
-                android:text="test22"
                 app:layout_constraintBottom_toBottomOf="@id/card_avatar"
                 app:layout_constraintEnd_toStartOf="@id/card_menu"
                 app:layout_constraintStart_toEndOf="@id/card_avatar"

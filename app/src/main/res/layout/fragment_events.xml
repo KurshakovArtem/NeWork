@@ -58,7 +58,7 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="@dimen/common_spacing"
         android:layout_marginBottom="120dp"
-        android:contentDescription="add_post"
+        android:contentDescription="@string/add_post"
         android:src="@drawable/ic_add_24" />
 
 

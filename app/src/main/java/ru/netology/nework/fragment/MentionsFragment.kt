@@ -41,50 +41,103 @@ class MentionsFragment : Fragment() {
             false
         )
 
+        val navController = findNavController()
+
+        val previousFragmentId = navController.previousBackStackEntry?.destination?.id
+
         val adapter = MentionAdapter(object : OnMentionListener {
             override fun onUserSelected(
                 user: MentionUser,
                 isSelected: Boolean
             ) {
-                viewModel.toggleMentionSelection(user.id)
+                when (previousFragmentId) {
+                    R.id.newPostFragment -> {
+                        viewModel.toggleMentionSelection(user.id)
+                    }
+
+                    R.id.newEventFragment -> {
+                        viewModel.toggleSpeakerSelection(user.id)
+                    }
+                }
+
             }
         })
 
         binding.list.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.mentionUsersFlow.collect { list ->
-                    adapter.submitList(list)
+        when (previousFragmentId) {
+            R.id.newPostFragment -> {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.mentionUsersFlow.collect { list ->
+                            adapter.submitList(list)
+                        }
+                    }
                 }
+
+                requireActivity().addMenuProvider(
+                    object : MenuProvider {
+                        override fun onCreateMenu(
+                            menu: Menu,
+                            menuInflater: MenuInflater
+                        ) {
+                            menuInflater.inflate(R.menu.menu_top_app_bar, menu)
+                        }
+
+                        override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                            when (menuItem.itemId) {
+                                R.id.save -> {
+                                    findNavController().navigateUp()
+                                    true
+                                }
+
+                                R.id.clear -> {
+                                    viewModel.clearMentionsList()
+                                    true
+                                }
+
+                                else -> false
+                            }
+                    }, viewLifecycleOwner
+                )
+            }
+
+            R.id.newEventFragment -> {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.speakerUsersFlow.collect { list ->
+                            adapter.submitList(list)
+                        }
+                    }
+                }
+
+                requireActivity().addMenuProvider(
+                    object : MenuProvider {
+                        override fun onCreateMenu(
+                            menu: Menu,
+                            menuInflater: MenuInflater
+                        ) {
+                            menuInflater.inflate(R.menu.menu_top_app_bar, menu)
+                        }
+
+                        override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                            when (menuItem.itemId) {
+                                R.id.save -> {
+                                    findNavController().navigateUp()
+                                    true
+                                }
+
+                                R.id.clear -> {
+                                    viewModel.clearSpeakerList()
+                                    true
+                                }
+
+                                else -> false
+                            }
+                    }, viewLifecycleOwner
+                )
             }
         }
-
-        requireActivity().addMenuProvider(
-            object : MenuProvider {
-                override fun onCreateMenu(
-                    menu: Menu,
-                    menuInflater: MenuInflater
-                ) {
-                    menuInflater.inflate(R.menu.menu_top_app_bar, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                    when (menuItem.itemId) {
-                        R.id.save -> {
-                            findNavController().navigateUp()
-                            true
-                        }
-                        R.id.clear -> {
-                            viewModel.clearMentionsList()
-                            true
-                        }
-
-                        else -> false
-                    }
-            }, viewLifecycleOwner
-        )
-
         return binding.root
     }
 }

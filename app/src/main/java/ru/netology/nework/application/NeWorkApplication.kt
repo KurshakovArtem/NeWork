@@ -20,6 +20,7 @@ class NeWorkApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         MapKitFactory.setApiKey(BuildConfig.MAPS_API_KEY)
+        MapKitFactory.initialize(this)
         setupAuth()
     }
 

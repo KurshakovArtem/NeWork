@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nework.R
 import ru.netology.nework.adapter.EventAdapter
@@ -18,6 +19,7 @@ import ru.netology.nework.adapter.OnEventListener
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.databinding.FragmentEventsBinding
 import ru.netology.nework.dto.Event
+import ru.netology.nework.model.FeedErrorMassage
 import ru.netology.nework.viewmodel.PostViewModel
 import javax.inject.Inject
 import kotlin.getValue
@@ -46,6 +48,14 @@ class EventsFragment : Fragment() {
             override fun onLike(event: Event) {
                 if (appAuth.authStateFlow.value.id != 0L) {
                     viewModel.likeEventById(event)
+                } else {
+                    showLoginDialog()
+                }
+            }
+
+            override fun onParticipants(event: Event) {
+                if (appAuth.authStateFlow.value.id != 0L) {
+                    viewModel.addParticipantsById(event)
                 } else {
                     showLoginDialog()
                 }
@@ -82,13 +92,13 @@ class EventsFragment : Fragment() {
             binding.emptyText.isVisible = state.empty
         }
 
-//        binding.fabButton.setOnClickListener {
-//            if (appAuth.authStateFlow.value.id != 0L) {
-//                findNavController().navigate(R.id.action_postsFragment_to_newPostFragment)
-//            } else {
-//                showLoginDialog()
-//            }
-//        }
+        binding.fabButton.setOnClickListener {
+            if (appAuth.authStateFlow.value.id != 0L) {
+                findNavController().navigate(R.id.action_eventsFragment_to_newEventFragment)
+            } else {
+                showLoginDialog()
+            }
+        }
 
         binding.swiperefresh.setOnRefreshListener {
             viewModel.eventsRefresh()
@@ -97,6 +107,77 @@ class EventsFragment : Fragment() {
         val bottomNav =
             (requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation))
 
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+            binding.progress.isVisible = state.loading
+            binding.swiperefresh.isRefreshing = state.refreshing
+            if (state.error) {
+                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
+                    .setAnchorView(bottomNav)
+                    .setAction(R.string.retry_loading) {
+                        viewModel.loadEvents()
+                    }
+                    .show()
+            }
+
+            when (state.errorReport?.feedErrorMassage) {
+                FeedErrorMassage.LIKE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.like_error, Snackbar.LENGTH_LONG)
+                        .setAnchorView(bottomNav)
+                        .setAction(R.string.retry_loading) {
+                            val eventId = state.errorReport.postIdError
+                            val event = viewModel.eventData.value?.events?.find { it.id == eventId }
+                                ?: return@setAction
+                            viewModel.likeEventById(event)
+                        }
+                        .show()
+                }
+
+                FeedErrorMassage.DISLIKE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.dislike_error, Snackbar.LENGTH_LONG)
+                        .setAnchorView(bottomNav)
+                        .setAction(R.string.retry_loading) {
+                            val eventId = state.errorReport.postIdError
+                            val event = viewModel.eventData.value?.events?.find { it.id == eventId }
+                                ?: return@setAction
+                            viewModel.likeEventById(event)
+                        }
+                        .show()
+                }
+
+                FeedErrorMassage.REMOVE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.remove_error, Snackbar.LENGTH_LONG)
+                        .setAnchorView(bottomNav)
+                        .setAction(R.string.retry_loading) {
+                            val eventId = state.errorReport.postIdError
+                            viewModel.removeEventById(eventId)
+                        }
+                        .show()
+                }
+
+                FeedErrorMassage.SAVE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.save_error, Snackbar.LENGTH_LONG)
+                        .setAnchorView(bottomNav)
+                        .setAction(R.string.retry_loading) {
+                            viewModel.saveEvent()
+                        }
+                        .show()
+                }
+
+                FeedErrorMassage.PARTICIPANTS_ERROR -> {
+                    Snackbar.make(binding.root, R.string.participants_error, Snackbar.LENGTH_LONG)
+                        .setAnchorView(bottomNav)
+                        .setAction(R.string.retry_loading) {
+                            val eventId = state.errorReport.postIdError
+                            val event = viewModel.eventData.value?.events?.find { it.id == eventId }
+                                ?: return@setAction
+                            viewModel.addParticipantsById(event)
+                        }
+                        .show()
+                }
+
+                null -> {} //нет смысла уведомлять об успешной операции
+            }
+        }
 
         return binding.root
     }

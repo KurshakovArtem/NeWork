@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -38,6 +39,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var appAuth: AppAuth
 
+
+
     private val viewModel: AuthViewModel by viewModels()
     private val postViewModel: PostViewModel by viewModels()
 
@@ -48,7 +51,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        MapKitFactory.initialize(this)
+
+
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -88,7 +92,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.let { actionBar ->
             actionBar.title = getString(R.string.app_name)
         }
-
 
 
 
@@ -135,6 +138,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        postViewModel.saveBeforeBack.value = !(postViewModel.saveBeforeBack.value ?: false)
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 

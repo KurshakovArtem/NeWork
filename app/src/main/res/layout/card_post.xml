@@ -60,7 +60,6 @@
                 app:layout_constraintBottom_toBottomOf="@id/card_avatar"
                 app:layout_constraintEnd_toStartOf="@id/card_menu"
                 app:layout_constraintStart_toEndOf="@id/card_avatar"
-                android:text="test22"
                 tools:text="Дата и время" />
 
             <com.google.android.material.button.MaterialButton

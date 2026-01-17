@@ -32,6 +32,15 @@ interface EventDao {
     )
     suspend fun likeById(id: Long)
 
+    @Query(
+        """
+        UPDATE EventEntity SET
+                participatedByMe = CASE WHEN participatedByMe THEN 0 ELSE 1 END
+                WHERE id = :id;
+    """
+    )
+    suspend fun participantsById(id: Long)
+
     @Query("DELETE FROM EventEntity WHERE id = :id")
     suspend fun removeById(id: Long)
 }

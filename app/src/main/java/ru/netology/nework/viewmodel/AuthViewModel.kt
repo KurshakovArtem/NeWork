@@ -101,6 +101,4 @@ class AuthViewModel @Inject constructor(
     fun removePhoto() {
         _photo.value = null
     }
-
-
 }

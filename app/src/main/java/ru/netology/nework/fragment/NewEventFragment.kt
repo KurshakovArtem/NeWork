@@ -14,8 +14,10 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toFile
 import androidx.core.view.MenuProvider
+import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -26,29 +28,24 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
-import ru.netology.nework.databinding.FragmentNewPostBinding
+import ru.netology.nework.databinding.FragmentNewEventBinding
 import ru.netology.nework.supportingFunctions.AndroidUtils
 import ru.netology.nework.supportingFunctions.dpToPx
 import ru.netology.nework.supportingFunctions.loadAvatar
 import ru.netology.nework.viewmodel.PostViewModel
+import kotlin.getValue
 
 @AndroidEntryPoint
-class NewPostFragment : Fragment() {
+class NewEventFragment : Fragment() {
 
     private val viewModel: PostViewModel by activityViewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        val binding = FragmentNewPostBinding.inflate(
-            inflater,
-            container,
-            false
-        )
-
+        val binding = FragmentNewEventBinding.inflate(inflater, container, false)
 
         val photoLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -58,7 +55,7 @@ class NewPostFragment : Fragment() {
                     return@registerForActivityResult
                 }
                 val uri = result.data?.data ?: return@registerForActivityResult
-                viewModel.updatePostPhoto(uri, uri.toFile())
+                viewModel.updateEventPhoto(uri, uri.toFile())
             }
 
         requireActivity().addMenuProvider(
@@ -74,19 +71,19 @@ class NewPostFragment : Fragment() {
                     when (menuItem.itemId) {
                         R.id.save -> {
                             if (binding.edit.text.isNotBlank()) {
-                                viewModel.setPostContentAndLink(
+                                viewModel.setEventContentAndLink(
                                     binding.edit.text.toString(),
                                     binding.link.text.toString()
                                 )
-                                viewModel.setSelectedMentionIds()
+                                viewModel.setSelectedSpeakerIds()
                                 AndroidUtils.hideKeyboard(requireView())
-                                viewModel.savePost()
+                                viewModel.saveEvent()
                                 true
                             } else false
                         }
 
                         R.id.clear -> {
-                            viewModel.clearPostEditingState()
+                            viewModel.clearEventEditingState()
                             true
                         }
 
@@ -95,13 +92,16 @@ class NewPostFragment : Fragment() {
             }, viewLifecycleOwner
         )
 
-        viewModel.postCreated.observe(viewLifecycleOwner) {
+        viewModel.eventCreated.observe(viewLifecycleOwner) {
             findNavController().navigateUp()
         }
 
-        binding.buttonNewPostPanel.setPadding(0, 0, 0, viewModel.padding)
+        binding.buttonNewEventPanel.setPadding(0, 0, 0, viewModel.padding)
+        val fabParams =  binding.fabButton.layoutParams as ConstraintLayout.LayoutParams
+        fabParams.setMargins(0, 0, 0, viewModel.padding)
+        binding.fabButton.layoutParams = fabParams
 
-        viewModel.postPhoto.observe(viewLifecycleOwner) { photo ->
+        viewModel.eventPhoto.observe(viewLifecycleOwner) { photo ->
             if (photo == null) {
                 binding.photoContainer.visibility = View.GONE
                 return@observe
@@ -111,12 +111,11 @@ class NewPostFragment : Fragment() {
         }
 
         binding.removePhoto.setOnClickListener {
-            viewModel.removePostPhoto()
+            viewModel.removeEventPhoto()
         }
 
-
-        binding.addNewPostPhoto.setOnClickListener {
-            viewModel.setPostContentAndLink(
+        binding.addNewEventPhoto.setOnClickListener {
+            viewModel.setEventContentAndLink(
                 binding.edit.text.toString(),
                 binding.link.text.toString()
             )
@@ -146,42 +145,41 @@ class NewPostFragment : Fragment() {
                 .show()
         }
 
-        binding.addNewPostUsers.setOnClickListener {
-            viewModel.setPostContentAndLink(
+        binding.addNewEventUsers.setOnClickListener {
+            viewModel.setEventContentAndLink(
                 binding.edit.text.toString(),
                 binding.link.text.toString()
             )
-            findNavController().navigate(R.id.action_newPostFragment_to_mentionsFragment)
+            findNavController().navigate(R.id.action_newEventFragment_to_mentionsFragment)
         }
 
-        if (viewModel.postEdited.value?.id != 0L && !viewModel.mentionUsersIsTransferred){
-            val mentionsList = viewModel.postEdited.value?.mentionIds ?: emptyList()
-            viewModel.setMentionUsers(mentionsList)
+        if (viewModel.eventEdited.value?.id != 0L && !viewModel.speakerUsersIsTransferred) {
+            val speakersList = viewModel.eventEdited.value?.speakerIds ?: emptyList()
+            viewModel.setSpeakerUsers(speakersList)
         }
 
-        viewModel.postEdited.observe(viewLifecycleOwner) { edited ->
+        viewModel.eventEdited.observe(viewLifecycleOwner) { edited ->
             binding.edit.setText(edited.content)
             binding.link.setText(edited.link)
             if (edited.id != 0L) {
                 binding.photoContainer.visibility = View.GONE
-                binding.addNewPostPhoto.visibility = View.GONE
-                binding.addNewPostAttachment.visibility = View.GONE
+                binding.addNewEventPhoto.visibility = View.GONE
+                binding.addNewEventAttachment.visibility = View.GONE
             }
         }
 
-
-        val mentionsContainer = binding.mentionsPreviewContainer
+        val speakersContainer = binding.speakersPreviewContainer
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.mentionUsersFlow.collect { users ->
-                    mentionsContainer.removeAllViews()
+                viewModel.speakerUsersFlow.collect { users ->
+                    speakersContainer.removeAllViews()
 
                     val selectedUsers = users.filter { it.isSelected }
                     if (selectedUsers.isEmpty()) {
-                        mentionsContainer.visibility = View.GONE
+                        speakersContainer.visibility = View.GONE
                     } else {
-                        mentionsContainer.visibility = View.VISIBLE
+                        speakersContainer.visibility = View.VISIBLE
                     }
                     val visibleUsers = selectedUsers.take(5)
                     visibleUsers.forEachIndexed { index, user ->
@@ -205,7 +203,7 @@ class NewPostFragment : Fragment() {
                                 loadAvatar(user.avatar)
                             }
                         }
-                        mentionsContainer.addView(avatarView)
+                        speakersContainer.addView(avatarView)
                     }
 
                     if (selectedUsers.size > 5) {
@@ -222,29 +220,29 @@ class NewPostFragment : Fragment() {
                             outlineProvider = ViewOutlineProvider.BACKGROUND
 
                             setOnClickListener {
-                                findNavController().navigate(R.id.action_newPostFragment_to_mentionsFragment)
+                                findNavController().navigate(R.id.action_newEventFragment_to_mentionsFragment)
                             }
                         }
-                        mentionsContainer.addView(plusView)
+                        speakersContainer.addView(plusView)
                     }
 
                 }
             }
         }
 
-        binding.addNewPostLocation.setOnClickListener {
-            viewModel.setPostContentAndLink(
+        binding.addNewEventLocation.setOnClickListener {
+            viewModel.setEventContentAndLink(
                 binding.edit.text.toString(),
                 binding.link.text.toString()
             )
-            findNavController().navigate(R.id.action_newPostFragment_to_mapFragment)
+            findNavController().navigate(R.id.action_newEventFragment_to_mapFragment)
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    viewModel.setPostContentAndLink(
+                    viewModel.setEventContentAndLink(
                         binding.edit.text.toString(),
                         binding.link.text.toString()
                     )
@@ -253,11 +251,20 @@ class NewPostFragment : Fragment() {
             })
 
         viewModel.saveBeforeBack.observe(viewLifecycleOwner){
-            viewModel.setPostContentAndLink(
+            viewModel.setEventContentAndLink(
                 binding.edit.text.toString(),
                 binding.link.text.toString()
             )
         }
+
+        binding.fabButton.setOnClickListener {
+            viewModel.setEventContentAndLink(
+                binding.edit.text.toString(),
+                binding.link.text.toString()
+            )
+            BottomDateAndType().show(parentFragmentManager, "date_type_bottom_sheet")
+        }
+
 
 
         return binding.root

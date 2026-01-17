@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_new_post"
+    android:id="@+id/main_new_event"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.NewPostFragment">
+    tools:context=".fragment.NewEventFragment">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -24,19 +24,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_post_text"
-                android:textSize="20sp"
-                android:paddingTop="@dimen/common_spacing"
+                android:gravity="start|top"
                 android:paddingStart="@dimen/common_spacing"
+                android:paddingTop="@dimen/common_spacing"
                 android:paddingEnd="@dimen/common_spacing"
-                android:gravity="start|top"/>
+                android:text="@string/add_event_text"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:hint="@string/post_text"
+                android:hint="@string/event_text"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 android:padding="@dimen/common_spacing"
@@ -45,11 +45,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/add_link"
-                android:paddingTop="@dimen/common_spacing"
                 android:paddingStart="@dimen/common_spacing"
-                android:paddingEnd="@dimen/common_spacing"/>
+                android:paddingTop="@dimen/common_spacing"
+                android:paddingEnd="@dimen/common_spacing"
+                android:text="@string/add_link"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/link"
@@ -61,17 +61,17 @@
                 android:inputType="textUri"
                 android:padding="@dimen/common_spacing"
                 tools:text="@tools:sample/lorem[10]" />
-            
+
             <LinearLayout
-                android:id="@+id/mentions_preview_container"
+                android:id="@+id/speakers_preview_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="start|center_vertical"
-                android:padding="8dp"
                 android:layout_marginTop="8dp"
                 android:clipChildren="false"
-                android:clipToPadding="false"/>
+                android:clipToPadding="false"
+                android:gravity="start|center_vertical"
+                android:orientation="horizontal"
+                android:padding="8dp" />
 
             <FrameLayout
                 android:id="@+id/photoContainer"
@@ -108,22 +108,23 @@
         android:layout_marginStart="@dimen/common_spacing"
         android:layout_marginEnd="@dimen/common_spacing"
         android:background="@color/divider_color"
-        app:layout_constraintBottom_toTopOf="@id/button_new_post_panel"
+        app:layout_constraintBottom_toTopOf="@id/button_new_event_panel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
-        android:id="@+id/button_new_post_panel"
+        android:id="@+id/button_new_event_panel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/add_new_post_photo"
+            android:id="@+id/add_new_event_photo"
             style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -132,7 +133,7 @@
             app:icon="@drawable/ic_camera_24" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/add_new_post_attachment"
+            android:id="@+id/add_new_event_attachment"
             style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -141,7 +142,7 @@
             app:icon="@drawable/ic_attach_file_24" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/add_new_post_users"
+            android:id="@+id/add_new_event_users"
             style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -150,7 +151,7 @@
             app:icon="@drawable/ic_people_24" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/add_new_post_location"
+            android:id="@+id/add_new_event_location"
             style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -158,6 +159,19 @@
             android:padding="@dimen/common_spacing"
             app:icon="@drawable/ic_location_pin_24" />
 
+
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/common_spacing"
+        android:contentDescription="@string/add_date_and_type"
+        android:src="@drawable/ic_add_24"
+        android:paddingBottom="@dimen/double_common_spacing"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

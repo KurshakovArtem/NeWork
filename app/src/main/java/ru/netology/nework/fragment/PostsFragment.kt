@@ -156,6 +156,7 @@ class PostsFragment : Fragment() {
                         .show()
                 }
 
+                FeedErrorMassage.PARTICIPANTS_ERROR -> {}
 
                 null -> {} //нет смысла уведомлять об успешной операции
             }

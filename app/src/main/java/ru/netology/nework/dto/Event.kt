@@ -12,14 +12,14 @@ data class Event(
     val datetime: String,
     val published: String,
     val coords: Coordinates? = null,
-    val type: EventType,
+    val type: EventType = EventType.ONLINE,
     val likeOwnerIds: List<Long>? = emptyList(),
-    val likedByMe: Boolean,
+    val likedByMe: Boolean = false,
     val speakerIds: List<Long>? = emptyList(),
     val participantsIds: List<Long>? = emptyList(),
-    val participatedByMe: Boolean,
+    val participatedByMe: Boolean = false,
     val attachment: Attachment? = null,
     val link: String? = null,
-    val users: Map<Long, UserPreview>?,
+    val users: Map<Long, UserPreview>? = emptyMap(),
     val ownedByMe: Boolean = false
 )

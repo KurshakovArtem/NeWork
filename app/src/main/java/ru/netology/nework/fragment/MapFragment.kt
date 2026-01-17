@@ -45,6 +45,10 @@ class MapFragment : Fragment() {
     private var mapView: MapView? = null
     private lateinit var userLocation: UserLocationLayer
 
+//    val navController = findNavController()
+//    val previousFragmentId = navController.previousBackStackEntry?.destination?.id
+private var previousFragmentId: Int? = null
+
     private val listener = object : InputListener {
         override fun onMapTap(map: Map, point: Point) = Unit
 
@@ -52,7 +56,15 @@ class MapFragment : Fragment() {
             map: Map,
             point: Point
         ) {
-            viewModel.setLocation(point.latitude, point.longitude)
+            when (previousFragmentId) {
+                R.id.newPostFragment -> {
+                    viewModel.setPostLocation(point.latitude, point.longitude)
+                }
+
+                R.id.newEventFragment -> {
+                    viewModel.setEventLocation(point.latitude, point.longitude)
+                }
+            }
         }
     }
 
@@ -97,6 +109,8 @@ class MapFragment : Fragment() {
             }
         }
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -104,6 +118,9 @@ class MapFragment : Fragment() {
     ): View {
 
         val binding = FragmentMapBinding.inflate(inflater, container, false)
+
+        val navController = findNavController()
+      previousFragmentId = navController.previousBackStackEntry?.destination?.id
 
         mapView = binding.map.apply {
             userLocation = MapKitFactory.getInstance().createUserLocationLayer(mapWindow)
@@ -113,28 +130,59 @@ class MapFragment : Fragment() {
             mapWindow.map.addInputListener(listener)
             val collection = mapWindow.map.mapObjects.addCollection()
 
-            viewModel.edited.observe(viewLifecycleOwner) { post ->
-                collection.clear()
-                val placeBinding = LocationBinding.inflate(layoutInflater)
-                if (post.coords != null) {
-                    val point = Point(post.coords.lat, post.coords.long)
+            when (previousFragmentId) {
+                R.id.newPostFragment -> {
+                    viewModel.postEdited.observe(viewLifecycleOwner) { post ->
+                        collection.clear()
+                        val placeBinding = LocationBinding.inflate(layoutInflater)
+                        if (post.coords != null) {
+                            val point = Point(post.coords.lat, post.coords.long)
 
-                    collection.addPlacemark(
-                        point,
-                        ViewProvider(placeBinding.root)
-                    )
+                            collection.addPlacemark(
+                                point,
+                                ViewProvider(placeBinding.root)
+                            )
 
-                    val cameraPosition = mapWindow.map.cameraPosition
-                    mapWindow.map.move(
-                        CameraPosition(
-                            Point(post.coords.lat, post.coords.long),
-                            10F,
-                            cameraPosition.azimuth,
-                            cameraPosition.tilt,
-                        )
-                    )
-                } else {
-                    userLocation.setObjectListener(locationObjectListener)
+                            val cameraPosition = mapWindow.map.cameraPosition
+                            mapWindow.map.move(
+                                CameraPosition(
+                                    Point(post.coords.lat, post.coords.long),
+                                    10F,
+                                    cameraPosition.azimuth,
+                                    cameraPosition.tilt,
+                                )
+                            )
+                        } else {
+                            userLocation.setObjectListener(locationObjectListener)
+                        }
+                    }
+                }
+
+                R.id.newEventFragment -> {
+                    viewModel.eventEdited.observe(viewLifecycleOwner) { post ->
+                        collection.clear()
+                        val placeBinding = LocationBinding.inflate(layoutInflater)
+                        if (post.coords != null) {
+                            val point = Point(post.coords.lat, post.coords.long)
+
+                            collection.addPlacemark(
+                                point,
+                                ViewProvider(placeBinding.root)
+                            )
+
+                            val cameraPosition = mapWindow.map.cameraPosition
+                            mapWindow.map.move(
+                                CameraPosition(
+                                    Point(post.coords.lat, post.coords.long),
+                                    10F,
+                                    cameraPosition.azimuth,
+                                    cameraPosition.tilt,
+                                )
+                            )
+                        } else {
+                            userLocation.setObjectListener(locationObjectListener)
+                        }
+                    }
                 }
             }
         }
@@ -163,7 +211,15 @@ class MapFragment : Fragment() {
             }
 
             removeLocation.setOnClickListener {
-                viewModel.removeLocation()
+                when (previousFragmentId) {
+                    R.id.newPostFragment -> {
+                        viewModel.removePostLocation()
+                    }
+
+                    R.id.newEventFragment -> {
+                        viewModel.removeEventLocation()
+                    }
+                }
             }
 
             myLocation.setOnClickListener {
@@ -188,7 +244,15 @@ class MapFragment : Fragment() {
                         }
 
                         R.id.clear -> {
-                            viewModel.removeLocation()
+                            when (previousFragmentId) {
+                                R.id.newPostFragment -> {
+                                    viewModel.removePostLocation()
+                                }
+
+                                R.id.newEventFragment -> {
+                                    viewModel.removeEventLocation()
+                                }
+                            }
                             true
                         }
 
