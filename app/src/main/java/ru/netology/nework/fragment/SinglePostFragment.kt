@@ -18,6 +18,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
@@ -31,6 +32,7 @@ import ru.netology.nework.databinding.FragmentSinglePostBinding
 import ru.netology.nework.databinding.LocationBinding
 import ru.netology.nework.dto.Post
 import ru.netology.nework.enumeration.AttachmentType
+import ru.netology.nework.model.FeedErrorMassage
 import ru.netology.nework.supportingFunctions.convertResponseToCardPost
 import ru.netology.nework.supportingFunctions.converterNumToString
 import ru.netology.nework.supportingFunctions.dpToPx
@@ -311,6 +313,65 @@ class SinglePostFragment : Fragment() {
                         cameraPosition.tilt,
                     )
                 )
+            }
+        }
+
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+            if (state.error) {
+                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry_loading) {
+                        viewModel.loadPosts()
+                    }
+                    .show()
+                viewModel.clearDataState()
+            }
+
+            when (state.errorReport?.feedErrorMassage) {
+                FeedErrorMassage.LIKE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.like_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry_loading) {
+                            val postId = state.errorReport.postIdError
+                            val post = viewModel.postData.value?.posts?.find { it.id == postId }
+                                ?: return@setAction
+                            viewModel.likePostById(post)
+                        }
+                        .show()
+                    viewModel.clearDataState()
+                }
+
+                FeedErrorMassage.DISLIKE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.dislike_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry_loading) {
+                            val postId = state.errorReport.postIdError
+                            val post = viewModel.postData.value?.posts?.find { it.id == postId }
+                                ?: return@setAction
+                            viewModel.likePostById(post)
+                        }
+                        .show()
+                    viewModel.clearDataState()
+                }
+
+                FeedErrorMassage.REMOVE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.remove_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry_loading) {
+                            val postId = state.errorReport.postIdError
+                            viewModel.removePostById(postId)
+                        }
+                        .show()
+                }
+
+                FeedErrorMassage.SAVE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.save_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry_loading) {
+                            viewModel.savePost()
+                        }
+                        .show()
+                    viewModel.clearDataState()
+                }
+                null -> {}
+                else -> {
+                    viewModel.clearDataState()
+                }
             }
         }
 

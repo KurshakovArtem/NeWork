@@ -159,6 +159,10 @@ class PostViewModel @Inject constructor(
         loadEvents()
     }
 
+    fun clearDataState(){
+        _dataState.value = FeedModelState()
+    }
+
     fun postRefresh() {
         viewModelScope.launch {
             _dataState.value = FeedModelState(refreshing = true)

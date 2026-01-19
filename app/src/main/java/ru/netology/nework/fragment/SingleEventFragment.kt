@@ -18,6 +18,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
@@ -31,6 +32,7 @@ import ru.netology.nework.databinding.FragmentSingleEventBinding
 import ru.netology.nework.databinding.LocationBinding
 import ru.netology.nework.dto.Event
 import ru.netology.nework.enumeration.AttachmentType
+import ru.netology.nework.model.FeedErrorMassage
 import ru.netology.nework.supportingFunctions.convertResponseToCardPost
 import ru.netology.nework.supportingFunctions.converterNumToString
 import ru.netology.nework.supportingFunctions.dpToPx
@@ -384,6 +386,75 @@ class SingleEventFragment : Fragment() {
                         cameraPosition.tilt,
                     )
                 )
+            }
+        }
+
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+            if (state.error) {
+                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry_loading) {
+                        viewModel.loadEvents()
+                    }
+                    .show()
+                viewModel.clearDataState()
+            }
+
+            when (state.errorReport?.feedErrorMassage) {
+                FeedErrorMassage.LIKE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.like_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry_loading) {
+                            val eventId = state.errorReport.postIdError
+                            val event = viewModel.eventData.value?.events?.find { it.id == eventId }
+                                ?: return@setAction
+                            viewModel.likeEventById(event)
+                        }
+                        .show()
+                    viewModel.clearDataState()
+                }
+
+                FeedErrorMassage.DISLIKE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.dislike_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry_loading) {
+                            val eventId = state.errorReport.postIdError
+                            val event = viewModel.eventData.value?.events?.find { it.id == eventId }
+                                ?: return@setAction
+                            viewModel.likeEventById(event)
+                        }
+                        .show()
+                    viewModel.clearDataState()
+                }
+
+                FeedErrorMassage.REMOVE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.remove_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry_loading) {
+                            val eventId = state.errorReport.postIdError
+                            viewModel.removeEventById(eventId)
+                        }
+                        .show()
+                    viewModel.clearDataState()
+                }
+
+                FeedErrorMassage.SAVE_ERROR -> {
+                    Snackbar.make(binding.root, R.string.save_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry_loading) {
+                            viewModel.saveEvent()
+                        }
+                        .show()
+                    viewModel.clearDataState()
+                }
+
+                FeedErrorMassage.PARTICIPANTS_ERROR -> {
+                    Snackbar.make(binding.root, R.string.participants_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry_loading) {
+                            val eventId = state.errorReport.postIdError
+                            val event = viewModel.eventData.value?.events?.find { it.id == eventId }
+                                ?: return@setAction
+                            viewModel.addParticipantsById(event)
+                        }
+                        .show()
+                    viewModel.clearDataState()
+                }
+                null -> {}
             }
         }
 

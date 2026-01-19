@@ -111,6 +111,7 @@ class PostsFragment : Fragment() {
                         viewModel.loadPosts()
                     }
                     .show()
+                viewModel.clearDataState()
             }
 
             when (state.errorReport?.feedErrorMassage) {
@@ -124,6 +125,7 @@ class PostsFragment : Fragment() {
                             viewModel.likePostById(post)
                         }
                         .show()
+                    viewModel.clearDataState()
                 }
 
                 FeedErrorMassage.DISLIKE_ERROR -> {
@@ -136,6 +138,7 @@ class PostsFragment : Fragment() {
                             viewModel.likePostById(post)
                         }
                         .show()
+                    viewModel.clearDataState()
                 }
 
                 FeedErrorMassage.REMOVE_ERROR -> {
@@ -155,11 +158,12 @@ class PostsFragment : Fragment() {
                             viewModel.savePost()
                         }
                         .show()
+                    viewModel.clearDataState()
                 }
-
-                FeedErrorMassage.PARTICIPANTS_ERROR -> {}
-
-                null -> {} //нет смысла уведомлять об успешной операции
+                null -> {}  //нет смысла уведомлять об успешной операции
+                else -> {
+                    viewModel.clearDataState()
+                }
             }
         }
 

@@ -119,6 +119,7 @@ class EventsFragment : Fragment() {
                         viewModel.loadEvents()
                     }
                     .show()
+                viewModel.clearDataState()
             }
 
             when (state.errorReport?.feedErrorMassage) {
@@ -132,6 +133,7 @@ class EventsFragment : Fragment() {
                             viewModel.likeEventById(event)
                         }
                         .show()
+                    viewModel.clearDataState()
                 }
 
                 FeedErrorMassage.DISLIKE_ERROR -> {
@@ -144,6 +146,7 @@ class EventsFragment : Fragment() {
                             viewModel.likeEventById(event)
                         }
                         .show()
+                    viewModel.clearDataState()
                 }
 
                 FeedErrorMassage.REMOVE_ERROR -> {
@@ -154,6 +157,7 @@ class EventsFragment : Fragment() {
                             viewModel.removeEventById(eventId)
                         }
                         .show()
+                    viewModel.clearDataState()
                 }
 
                 FeedErrorMassage.SAVE_ERROR -> {
@@ -163,6 +167,7 @@ class EventsFragment : Fragment() {
                             viewModel.saveEvent()
                         }
                         .show()
+                    viewModel.clearDataState()
                 }
 
                 FeedErrorMassage.PARTICIPANTS_ERROR -> {
@@ -175,9 +180,9 @@ class EventsFragment : Fragment() {
                             viewModel.addParticipantsById(event)
                         }
                         .show()
+                    viewModel.clearDataState()
                 }
-
-                null -> {} //нет смысла уведомлять об успешной операции
+                null -> {}
             }
         }
 

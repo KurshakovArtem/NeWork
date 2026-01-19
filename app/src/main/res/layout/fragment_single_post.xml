@@ -148,6 +148,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/card_like_button"
                         style="@style/Style.CountButton"
+                        app:iconTint="@color/red"
                         android:layout_marginStart="@dimen/common_spacing"
                         android:contentDescription="@string/like_button"
                         android:textSize="12sp"
