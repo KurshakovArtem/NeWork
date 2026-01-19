@@ -33,6 +33,10 @@ class SignInFragment : Fragment() {
             false
         )
 
+        binding.needRegister.setOnClickListener {
+            findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
+        }
+
         binding.signInButton.setOnClickListener {
             val username = binding.loginEditText.text.toString()
             val password = binding.passwordEditText.text.toString()

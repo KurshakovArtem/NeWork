@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.SinglePostFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="#CAC4D0"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="5dp"
+            app:strokeColor="@color/gray"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+
+
+                    <ImageView
+                        android:id="@+id/card_avatar"
+                        android:layout_width="@dimen/posts_avatar_size"
+                        android:layout_height="@dimen/posts_avatar_size"
+                        android:contentDescription="@string/author_avatar"
+                        android:src="@drawable/ic_loading_100dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@tools:sample/avatars[4]" />
+
+                    <TextView
+                        android:id="@+id/card_author"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/common_spacing"
+                        android:layout_marginEnd="@dimen/common_spacing"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@id/card_menu"
+                        app:layout_constraintStart_toEndOf="@id/card_avatar"
+                        app:layout_constraintTop_toTopOf="@id/card_menu"
+                        tools:text="Автор                проверка" />
+
+                    <TextView
+                        android:id="@+id/card_published"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/common_spacing"
+                        android:layout_marginEnd="@dimen/common_spacing"
+                        app:layout_constraintBottom_toBottomOf="@id/card_avatar"
+                        app:layout_constraintEnd_toStartOf="@id/card_menu"
+                        app:layout_constraintStart_toEndOf="@id/card_avatar"
+                        tools:text="Дата и время" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/card_menu"
+                        style="?attr/materialIconButtonStyle"
+                        android:layout_width="@dimen/button_area"
+                        android:layout_height="@dimen/button_area"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/post_menu"
+                        android:paddingBottom="@dimen/common_spacing"
+                        app:icon="@drawable/ic_more_vert_24"
+                        app:iconTint="?attr/colorControlNormal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <FrameLayout
+                    android:id="@+id/card_attachment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+
+                    <ImageView
+                        android:id="@+id/card_attachment_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/attachment_card"
+                        android:scaleType="fitCenter"
+                        tools:src="@drawable/video_not_found" />
+
+                    <VideoView
+                        android:id="@+id/card_attachment_video"
+                        android:layout_width="match_parent"
+                        android:layout_height="230dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/attachment_card" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/card_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/common_spacing"
+                    android:autoLink="web"
+                    tools:text="Текст контента" />
+
+                <TextView
+                    android:id="@+id/card_link"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/common_spacing"
+                    android:layout_marginEnd="@dimen/common_spacing"
+                    android:autoLink="web"
+                    tools:text="www.youtube.com" />
+
+                <TextView
+                    android:id="@+id/card_likes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/common_spacing"
+                    android:layout_marginTop="@dimen/common_spacing"
+                    android:layout_marginEnd="@dimen/common_spacing"
+                    android:text="@string/likers"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/likers_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="start|center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/card_like_button"
+                        style="@style/Style.CountButton"
+                        android:layout_marginStart="@dimen/common_spacing"
+                        android:contentDescription="@string/like_button"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_like_24"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="1111" />
+
+                    <LinearLayout
+                        android:id="@+id/likers_preview_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:orientation="horizontal"/>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/card_mentioned"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/common_spacing"
+                    android:layout_marginTop="@dimen/common_spacing"
+                    android:layout_marginEnd="@dimen/common_spacing"
+                    android:text="@string/mentioned"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/mentions_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="start|center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/card_mentions_button"
+                        style="@style/Style.CountButton"
+                        android:layout_marginStart="@dimen/common_spacing"
+                        android:contentDescription="@string/mentioned"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_people_24"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="1111" />
+
+                    <LinearLayout
+                        android:id="@+id/mentions_preview_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:orientation="horizontal"/>
+
+
+                </LinearLayout>
+
+                <com.yandex.mapkit.mapview.MapView
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:visibility="gone" />
+
+
+            </LinearLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

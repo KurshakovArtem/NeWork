@@ -108,6 +108,9 @@ class PostViewModel @Inject constructor(
     padding берём из MainActivity системных настроек
      */
     var padding: Int = 0
+
+    var singlePostUse: Post? = null
+    var singleEventUse: Event? = null
     private val _mentionUsers = MutableStateFlow<List<MentionUser>>(emptyList())
     val mentionUsersFlow: StateFlow<List<MentionUser>>
         get() = _mentionUsers.asStateFlow()

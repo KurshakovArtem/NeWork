@@ -81,8 +81,9 @@ class EventsFragment : Fragment() {
                 startActivity(shareIntent)
             }
 
-            override fun onMoveToSinglePost(event: Event) {
-                super.onMoveToSinglePost(event)
+            override fun onMoveToSingleEvent(event: Event) {
+                viewModel.singleEventUse = event
+                findNavController().navigate(R.id.action_eventsFragment_to_singleEventFragment)
             }
         })
 

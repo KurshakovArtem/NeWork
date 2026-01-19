@@ -73,7 +73,8 @@ class PostsFragment : Fragment() {
             }
 
             override fun onMoveToSinglePost(post: Post) {
-                super.onMoveToSinglePost(post)
+                viewModel.singlePostUse = post
+                findNavController().navigate(R.id.action_postsFragment_to_singlePostFragment)
             }
 
         })

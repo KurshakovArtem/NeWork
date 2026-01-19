@@ -88,5 +88,9 @@
     <string name="new_post">Новый пост</string>
     <string name="new_event">Новое событие</string>
     <string name="map">Карта</string>
+    <string name="likers">Понравилось</string>
+    <string name="mentioned">Упомянул</string>
+    <string name="speakers">Спикеры</string>
+    <string name="participants">Участники</string>
 
 </resources>

@@ -98,7 +98,7 @@ class EventRepositoryImpl @Inject constructor(
                 coords = eventWithAttachment.coords,
                 link = eventWithAttachment.link,
                 attachment = eventWithAttachment.attachment,
-                participantsIds = eventWithAttachment.participantsIds,
+                speakerIds = eventWithAttachment.speakerIds,
                 datetime = eventWithAttachment.datetime,
                 type = eventWithAttachment.type.toString()
             )

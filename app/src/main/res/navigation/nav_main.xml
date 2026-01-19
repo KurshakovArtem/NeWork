@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_postsFragment_to_newPostFragment"
             app:destination="@id/newPostFragment" />
+        <action
+            android:id="@+id/action_postsFragment_to_singlePostFragment"
+            app:destination="@id/singlePostFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventsFragment"
@@ -34,6 +37,9 @@
         <action
             android:id="@+id/action_eventsFragment_to_newEventFragment"
             app:destination="@id/newEventFragment" />
+        <action
+            android:id="@+id/action_eventsFragment_to_singleEventFragment"
+            app:destination="@id/singleEventFragment" />
     </fragment>
     <fragment
         android:id="@+id/usersFragment"
@@ -63,6 +69,12 @@
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_singlePostFragment"
+            app:destination="@id/singlePostFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_singleEventFragment"
+            app:destination="@id/singleEventFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -95,6 +107,9 @@
         <action
             android:id="@+id/action_newPostFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_newPostFragment_to_singlePostFragment"
+            app:destination="@id/singlePostFragment" />
     </fragment>
     <fragment
         android:id="@+id/mentionsFragment"
@@ -133,5 +148,38 @@
         <action
             android:id="@+id/action_newEventFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_newEventFragment_to_singleEventFragment"
+            app:destination="@id/singleEventFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/singlePostFragment"
+        android:name="ru.netology.nework.fragment.SinglePostFragment"
+        android:label="fragment_single_post"
+        tools:layout="@layout/fragment_single_post" >
+        <action
+            android:id="@+id/action_singlePostFragment_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
+        <action
+            android:id="@+id/action_singlePostFragment_to_postsFragment"
+            app:destination="@id/postsFragment" />
+        <action
+            android:id="@+id/action_singlePostFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/singleEventFragment"
+        android:name="ru.netology.nework.fragment.SingleEventFragment"
+        android:label="fragment_single_event"
+        tools:layout="@layout/fragment_single_event" >
+        <action
+            android:id="@+id/action_singleEventFragment_to_eventsFragment"
+            app:destination="@id/eventsFragment" />
+        <action
+            android:id="@+id/action_singleEventFragment_to_newEventFragment"
+            app:destination="@id/newEventFragment" />
+        <action
+            android:id="@+id/action_singleEventFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
 </navigation>

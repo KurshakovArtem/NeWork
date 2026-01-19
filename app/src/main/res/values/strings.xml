@@ -87,5 +87,9 @@
     <string name="new_post">New post</string>
     <string name="new_event">New Event</string>
     <string name="map">Map</string>
+    <string name="likers">Likers</string>
+    <string name="mentioned">Mentioned</string>
+    <string name="speakers">Speakers</string>
+    <string name="participants">Participants</string>
 
 </resources>

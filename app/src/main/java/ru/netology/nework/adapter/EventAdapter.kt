@@ -26,7 +26,7 @@ interface OnEventListener {
     fun onEdit(event: Event) {}
     fun onRemove(event: Event) {}
     fun onShare(event: Event) {}
-    fun onMoveToSinglePost(event: Event) {}
+    fun onMoveToSingleEvent(event: Event) {}
 }
 
 class EventAdapter
@@ -107,7 +107,7 @@ class EventViewHolder(
         }
 
         cardEvent.setOnClickListener {
-            onEventListener.onMoveToSinglePost(event)
+            onEventListener.onMoveToSingleEvent(event)
         }
 
         cardParticipantsButton.setOnClickListener {

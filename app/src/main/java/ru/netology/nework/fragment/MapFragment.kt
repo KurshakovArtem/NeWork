@@ -45,9 +45,7 @@ class MapFragment : Fragment() {
     private var mapView: MapView? = null
     private lateinit var userLocation: UserLocationLayer
 
-//    val navController = findNavController()
-//    val previousFragmentId = navController.previousBackStackEntry?.destination?.id
-private var previousFragmentId: Int? = null
+    private var previousFragmentId: Int? = null
 
     private val listener = object : InputListener {
         override fun onMapTap(map: Map, point: Point) = Unit
@@ -110,7 +108,6 @@ private var previousFragmentId: Int? = null
         }
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -120,7 +117,7 @@ private var previousFragmentId: Int? = null
         val binding = FragmentMapBinding.inflate(inflater, container, false)
 
         val navController = findNavController()
-      previousFragmentId = navController.previousBackStackEntry?.destination?.id
+        previousFragmentId = navController.previousBackStackEntry?.destination?.id
 
         mapView = binding.map.apply {
             userLocation = MapKitFactory.getInstance().createUserLocationLayer(mapWindow)
@@ -137,7 +134,7 @@ private var previousFragmentId: Int? = null
                         val placeBinding = LocationBinding.inflate(layoutInflater)
                         if (post.coords != null) {
                             val point = Point(post.coords.lat, post.coords.long)
-
+                            @Suppress("DEPRECATION")
                             collection.addPlacemark(
                                 point,
                                 ViewProvider(placeBinding.root)
@@ -164,7 +161,7 @@ private var previousFragmentId: Int? = null
                         val placeBinding = LocationBinding.inflate(layoutInflater)
                         if (post.coords != null) {
                             val point = Point(post.coords.lat, post.coords.long)
-
+                            @Suppress("DEPRECATION")
                             collection.addPlacemark(
                                 point,
                                 ViewProvider(placeBinding.root)
