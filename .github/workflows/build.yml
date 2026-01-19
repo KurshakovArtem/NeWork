@@ -18,11 +18,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-  
-      - name: Decode google-services.json
-        env:
-          FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}
-        run: echo $FIREBASE_SECRET > ./app/google-services.json
+
+      - name: Generate maps.properties
+        run: |
+            echo "API_KEY=${{ secrets.API_KEY }}" > maps.properties
+            echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> maps.properties
 
       - name: Build
         run: |
