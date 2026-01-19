@@ -138,9 +138,9 @@ class PostViewModel @Inject constructor(
     val eventEdited: LiveData<Event>
         get() = _eventEdited
 
-    private val _locationState = MutableLiveData<Coordinates?>()
-    val locationState: LiveData<Coordinates?>
-        get() = _locationState
+//    private val _locationState = MutableLiveData<Coordinates?>()
+//    val locationState: LiveData<Coordinates?>
+//        get() = _locationState
 
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
@@ -334,7 +334,6 @@ class PostViewModel @Inject constructor(
     }
 
     fun addParticipantsById(event: Event) {
-        val isParticipatedByMe = event.participatedByMe
         viewModelScope.launch {
             try {
                 eventRepository.participantsById(event.id)

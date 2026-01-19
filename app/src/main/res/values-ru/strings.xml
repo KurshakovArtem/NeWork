@@ -92,5 +92,7 @@
     <string name="mentioned">Упомянул</string>
     <string name="speakers">Спикеры</string>
     <string name="participants">Участники</string>
+    <string name="post">Пост</string>
+    <string name="event">Событие</string>
 
 </resources>

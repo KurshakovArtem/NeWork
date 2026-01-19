@@ -17,7 +17,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toFile
 import androidx.core.view.MenuProvider
-import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -34,7 +33,6 @@ import ru.netology.nework.supportingFunctions.AndroidUtils
 import ru.netology.nework.supportingFunctions.dpToPx
 import ru.netology.nework.supportingFunctions.loadAvatar
 import ru.netology.nework.viewmodel.PostViewModel
-import kotlin.getValue
 
 @AndroidEntryPoint
 class NewEventFragment : Fragment() {

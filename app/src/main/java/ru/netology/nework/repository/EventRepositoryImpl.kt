@@ -12,10 +12,8 @@ import ru.netology.nework.dto.Attachment
 import ru.netology.nework.dto.Event
 import ru.netology.nework.dto.EventRequest
 import ru.netology.nework.dto.Media
-import ru.netology.nework.dto.PostRequest
 import ru.netology.nework.entity.EventEntity
 import ru.netology.nework.entity.EventEntity.Companion.fromEvent
-import ru.netology.nework.entity.PostEntity.Companion.fromDto
 import ru.netology.nework.entity.toEvent
 import ru.netology.nework.entity.toEventEntity
 import ru.netology.nework.enumeration.AttachmentType

@@ -91,5 +91,7 @@
     <string name="mentioned">Mentioned</string>
     <string name="speakers">Speakers</string>
     <string name="participants">Participants</string>
+    <string name="post">Post</string>
+    <string name="event">Event</string>
 
 </resources>

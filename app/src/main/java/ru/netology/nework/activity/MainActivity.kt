@@ -10,7 +10,6 @@ import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -92,6 +91,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.signUpFragment -> getString(R.string.registration)
                 R.id.mapFragment -> getString(R.string.map)
                 R.id.mentionsFragment -> getString(R.string.users)
+                R.id.singlePostFragment -> getString(R.string.post)
+                R.id.singleEventFragment -> getString(R.string.event)
 
 
                 else -> getString(R.string.app_name)

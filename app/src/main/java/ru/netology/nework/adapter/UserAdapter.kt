@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nework.R
 import ru.netology.nework.databinding.CardUserBinding
-import ru.netology.nework.databinding.CardUsersMentionedBinding
-import ru.netology.nework.dto.MentionUser
 import ru.netology.nework.dto.User
 import ru.netology.nework.supportingFunctions.loadAvatar
 

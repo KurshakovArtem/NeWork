@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
 import androidx.core.view.isVisible
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -89,7 +88,7 @@ class SignUpFragment : Fragment() {
                 )
                 AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.select_photo_action))
-                    .setItems(options) { dialog, which ->
+                    .setItems(options) { _, which ->
                         when (which) {
                             0 -> {
                                 ImagePicker.with(this)
@@ -122,7 +121,7 @@ class SignUpFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.remove_photo))
             .setMessage(getString(R.string.are_you_sure_remove_photo))
-            .setPositiveButton(getString(R.string.yes)) { dialog, which ->
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
                 viewModel.removePhoto()
             }
             .setNegativeButton(getString(R.string.no), null)

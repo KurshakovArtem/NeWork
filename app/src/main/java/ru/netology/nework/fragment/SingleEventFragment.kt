@@ -30,7 +30,6 @@ import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.databinding.FragmentSingleEventBinding
 import ru.netology.nework.databinding.LocationBinding
 import ru.netology.nework.dto.Event
-import ru.netology.nework.dto.Post
 import ru.netology.nework.enumeration.AttachmentType
 import ru.netology.nework.supportingFunctions.convertResponseToCardPost
 import ru.netology.nework.supportingFunctions.converterNumToString
@@ -39,7 +38,6 @@ import ru.netology.nework.supportingFunctions.loadAttachmentImage
 import ru.netology.nework.supportingFunctions.loadAvatar
 import ru.netology.nework.viewmodel.PostViewModel
 import javax.inject.Inject
-import kotlin.getValue
 
 @AndroidEntryPoint
 class SingleEventFragment : Fragment() {

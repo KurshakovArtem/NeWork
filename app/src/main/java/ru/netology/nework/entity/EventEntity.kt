@@ -6,12 +6,9 @@ import androidx.room.TypeConverters
 import ru.netology.nework.dto.Attachment
 import ru.netology.nework.dto.Coordinates
 import ru.netology.nework.dto.Event
-import ru.netology.nework.dto.Post
 import ru.netology.nework.dto.UserPreview
-import ru.netology.nework.enumeration.EventType
 import ru.netology.nework.enumeration.toAttachmentType
 import ru.netology.nework.enumeration.toEventType
-import kotlin.Long
 
 @Entity
 data class EventEntity(

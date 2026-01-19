@@ -1,11 +1,11 @@
 package ru.netology.nework.adapter
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -18,7 +18,6 @@ import ru.netology.nework.supportingFunctions.convertResponseToCardPost
 import ru.netology.nework.supportingFunctions.converterNumToString
 import ru.netology.nework.supportingFunctions.loadAttachmentImage
 import ru.netology.nework.supportingFunctions.loadAvatar
-import androidx.core.net.toUri
 
 
 interface OnInteractionListener {
